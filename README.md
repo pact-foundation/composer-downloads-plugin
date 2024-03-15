@@ -14,7 +14,7 @@ Suppose your PHP package `foo/bar` relies on an external archive file (`examplel
 {
   "name": "foo/bar",
   "require": {
-    "tienvx/composer-downloads-plugin": "^1.0"
+    "pact-foundation/composer-downloads-plugin": "^1.0"
   },
   "extra": {
     "downloads": {
@@ -141,25 +141,25 @@ See more at [Doc](./doc/)
 
 ## Contributing
 
-Pull requests are welcome, please [send pull requests](https://github.com/tienvx/composer-downloads-plugin/pulls).
+Pull requests are welcome, please [send pull requests](https://github.com/pact-foundation/composer-downloads-plugin/pulls).
 
-If you found any bug, please [report issues](https://github.com/tienvx/composer-downloads-plugin/issues).
+If you found any bug, please [report issues](https://github.com/pact-foundation/composer-downloads-plugin/issues).
 
 ## Authors
 
 * **Rob Bayliss** - [Composer Extra Files](https://github.com/LastCallMedia/ComposerExtraFiles/graphs/contributors)
 * **Tim Otten** and contributors - [Composer Download Plugin](https://github.com/civicrm/composer-downloads-plugin/graphs/contributors)
-* **Tien Vo** and contributors - [this project](https://github.com/tienvx/composer-downloads-plugin/graphs/contributors)
+* **Tien Vo** and contributors - [this project](https://github.com/pact-foundation/composer-downloads-plugin/graphs/contributors)
 
 ## License
 
 This package is available under the [MIT license](LICENSE).
 
-[actions_badge]: https://github.com/tienvx/composer-downloads-plugin/workflows/main/badge.svg
-[actions_link]: https://github.com/tienvx/composer-downloads-plugin/actions
+[actions_badge]: https://github.com/pact-foundation/composer-downloads-plugin/workflows/main/badge.svg
+[actions_link]: https://github.com/pact-foundation/composer-downloads-plugin/actions
 
-[coveralls_badge]: https://coveralls.io/repos/tienvx/composer-downloads-plugin/badge.svg?branch=main&service=github
-[coveralls_link]: https://coveralls.io/github/tienvx/composer-downloads-plugin?branch=main
+[coveralls_badge]: https://coveralls.io/repos/pact-foundation/composer-downloads-plugin/badge.svg?branch=main&service=github
+[coveralls_link]: https://coveralls.io/github/pact-foundation/composer-downloads-plugin?branch=main
 
-[php-version-url]: https://packagist.org/packages/tienvx/composer-downloads-plugin
+[php-version-url]: https://packagist.org/packages/pact-foundation/composer-downloads-plugin
 [php-version-image]: http://img.shields.io/badge/php-8.0.0+-ff69b4.svg

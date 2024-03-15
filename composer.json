@@ -1,5 +1,5 @@
 {
-    "name": "tienvx/composer-downloads-plugin",
+    "name": "pact-foundation/composer-downloads-plugin",
     "description": "Composer plugin for downloading additional files within any composer package.",
     "type": "composer-plugin",
     "license": "MIT",
