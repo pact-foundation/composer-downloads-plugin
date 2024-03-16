@@ -25,7 +25,7 @@
         "symfony/finder": "^6.0 || ^7.0"
     },
     "require-dev": {
-        "composer/composer": "^2.2",
+        "composer/composer": "^2.3",
         "phpunit/phpunit": "^9.5.10",
         "symfony/process": "^6.0 || ^7.0",
         "php-vfs/php-vfs": "^1.4",
