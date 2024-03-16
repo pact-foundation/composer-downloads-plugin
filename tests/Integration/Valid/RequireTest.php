@@ -10,7 +10,7 @@ class RequireTest extends CommandTestCase
     {
         return [
             'require' => [
-                'tienvx/composer-downloads-plugin' => '@dev',
+                'pact-foundation/composer-downloads-plugin' => '@dev',
             ],
         ] + parent::getComposerJson();
     }

@@ -30,7 +30,7 @@ abstract class CommandTestCase extends TestCase
                 ],
             ],
             'require' => [
-                'tienvx/composer-downloads-plugin' => '@dev',
+                'pact-foundation/composer-downloads-plugin' => '@dev',
                 'test/library' => '@dev',
             ],
             'minimum-stability' => 'dev',
@@ -95,7 +95,7 @@ abstract class CommandTestCase extends TestCase
             ],
             'config' => [
                 'allow-plugins' => [
-                    'tienvx/composer-downloads-plugin' => true,
+                    'pact-foundation/composer-downloads-plugin' => true,
                 ],
                 'secure-http' => false,
             ],

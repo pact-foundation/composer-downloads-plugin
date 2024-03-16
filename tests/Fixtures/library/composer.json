@@ -1,7 +1,7 @@
 {
     "name": "test/library",
     "require": {
-        "tienvx/composer-downloads-plugin": "@dev"
+        "pact-foundation/composer-downloads-plugin": "@dev"
     },
     "extra": {
         "downloads": {
