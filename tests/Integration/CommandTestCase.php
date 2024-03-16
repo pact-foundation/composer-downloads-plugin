@@ -318,7 +318,7 @@ abstract class CommandTestCase extends TestCase
         self::$server = new Process(['php', '-S', 'localhost:8000', '-t', static::getFilesPath()]);
         self::$server->start();
         self::$server->waitUntil(function ($type, $output) {
-            return false !== strpos($output, 'Development Server (http://localhost:8000) started');
+            return str_contains($output, 'Development Server (http://localhost:8000) started');
         });
     }
 
