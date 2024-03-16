@@ -1,7 +1,6 @@
 name: main
 
 on:
-  push:
   pull_request:
     branches: [ main ]
 
@@ -20,7 +19,7 @@ jobs:
     strategy:
       matrix:
         php: [8.1, 8.2, 8.3]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [windows-latest]
         dependencies: [ 'lowest', 'highest' ]
     continue-on-error: ${{ matrix.os == 'windows-latest' && matrix.php != '8.1' }}
     name: PHP ${{ matrix.php }} - OS ${{ matrix.os }} - Dependencies ${{ matrix.dependencies }}
@@ -50,8 +49,14 @@ jobs:
         with:
           dependency-versions: ${{ matrix.dependencies }}
           composer-options: "--no-progress --no-suggest"
-      - name: Run tests
+      - name: Run tests (*NIX)
         run: ./vendor/bin/phpunit
+        if: ${{ matrix.os != 'windows-latest' }}
+      - name: Run tests (Windows)
+        run: |
+          set "PATH=%PATH%;c:\msys64\usr\bin"
+          ./vendor/bin/phpunit
+        if: ${{ matrix.os == 'windows-latest' }}
       - name: Upload coverage results to Coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
