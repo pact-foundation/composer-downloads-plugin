@@ -47,49 +47,22 @@ class FileHandlerTest extends BaseHandlerTestCase
     protected function assertDownload(): void
     {
         $this->composer->expects($this->once())->method('getDownloadManager')->willReturn($this->downloadManager);
-        if ($this->isComposerV2) {
-            $tmpFile = '/path/to/vendor/composer/tmp-random';
-            $this->downloadPromise
-                ->expects($this->once())
-                ->method('then')
-                ->willReturnCallback(fn (callable $callback) => $callback($tmpFile));
-            $this->downloadManager
-                ->expects($this->once())
-                ->method('download')
-                ->with($this->isInstanceOf(Subpackage::class), \dirname($this->targetPath))
-                ->willReturn($this->downloadPromise);
-            $this->loop
-                ->expects($this->once())
-                ->method('wait')
-                ->with([$this->downloadPromise]);
-            $this->composer->expects($this->once())->method('getLoop')->willReturn($this->loop);
-            $this->filesystem->expects($this->once())->method('rename')->with($tmpFile, $this->targetPath);
-        } else {
-            $downloader = $this->createMock(FileDownloader::class);
-            $this->filesystem
-                ->expects($this->once())
-                ->method('ensureDirectoryExists')
-                ->with($this->callback(function (string $dir) use ($downloader): bool {
-                    $this->assertStringContainsString(\dirname($this->targetPath), $dir);
-                    $this->assertStringContainsString(FileHandler::TMP_PREFIX, $dir);
-                    $tmpDir = $dir;
-                    $tmpFile = $tmpDir.\DIRECTORY_SEPARATOR.'file';
-                    $downloader
-                        ->expects($this->once())
-                        ->method('download')
-                        ->with($this->isInstanceOf(Subpackage::class), $tmpDir)
-                        ->willReturn($tmpFile);
-                    $this->filesystem->expects($this->once())->method('rename')->with($tmpFile, $this->targetPath);
-                    $this->filesystem->expects($this->once())->method('remove')->with($tmpDir);
-
-                    return true;
-                }));
-            $this->downloadManager
-                ->expects($this->once())
-                ->method('getDownloader')
-                ->with('file')
-                ->willReturn($downloader);
-        }
+        $tmpFile = '/path/to/vendor/composer/tmp-random';
+        $this->downloadPromise
+            ->expects($this->once())
+            ->method('then')
+            ->willReturnCallback(fn (callable $callback) => $callback($tmpFile));
+        $this->downloadManager
+            ->expects($this->once())
+            ->method('download')
+            ->with($this->isInstanceOf(Subpackage::class), \dirname($this->targetPath))
+            ->willReturn($this->downloadPromise);
+        $this->loop
+            ->expects($this->once())
+            ->method('wait')
+            ->with([$this->downloadPromise]);
+        $this->composer->expects($this->once())->method('getLoop')->willReturn($this->loop);
+        $this->filesystem->expects($this->once())->method('rename')->with($tmpFile, $this->targetPath);
     }
 
     protected function getExecutableType(): string

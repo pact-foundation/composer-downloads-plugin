@@ -26,16 +26,14 @@ class GzipHandlerTest extends FileHandlerTest
     protected function assertDownload(): void
     {
         $this->composer->expects($this->once())->method('getDownloadManager')->willReturn($this->downloadManager);
-        if ($this->isComposerV2) {
-            $this->loop
-                ->expects($this->exactly(2))
-                ->method('wait')
-                ->withConsecutive(
-                    [[$this->downloadPromise]],
-                    [[$this->installPromise]]
-                );
-            $this->composer->expects($this->exactly(2))->method('getLoop')->willReturn($this->loop);
-        }
+        $this->loop
+            ->expects($this->exactly(2))
+            ->method('wait')
+            ->withConsecutive(
+                [[$this->downloadPromise]],
+                [[$this->installPromise]]
+            );
+        $this->composer->expects($this->exactly(2))->method('getLoop')->willReturn($this->loop);
         $this->filesystem
             ->expects($this->once())
             ->method('ensureDirectoryExists')
@@ -44,23 +42,16 @@ class GzipHandlerTest extends FileHandlerTest
                 $this->assertStringContainsString(FileHandler::TMP_PREFIX, $dir);
                 $tmpDir = $dir;
                 $tmpFile = $tmpDir.\DIRECTORY_SEPARATOR.'file';
-                if ($this->isComposerV2) {
-                    $this->downloadManager
-                        ->expects($this->once())
-                        ->method('download')
-                        ->with($this->isInstanceOf(Subpackage::class), $tmpDir)
-                        ->willReturn($this->downloadPromise);
-                    $this->downloadManager
-                        ->expects($this->once())
-                        ->method('install')
-                        ->with($this->isInstanceOf(Subpackage::class), $tmpDir)
-                        ->willReturn($this->installPromise);
-                } else {
-                    $this->downloadManager
-                        ->expects($this->once())
-                        ->method('download')
-                        ->with($this->isInstanceOf(Subpackage::class), $tmpDir);
-                }
+                $this->downloadManager
+                    ->expects($this->once())
+                    ->method('download')
+                    ->with($this->isInstanceOf(Subpackage::class), $tmpDir)
+                    ->willReturn($this->downloadPromise);
+                $this->downloadManager
+                    ->expects($this->once())
+                    ->method('install')
+                    ->with($this->isInstanceOf(Subpackage::class), $tmpDir)
+                    ->willReturn($this->installPromise);
                 $this->filesystem->expects($this->once())->method('rename')->with($tmpFile, $this->targetPath);
                 $this->filesystem->expects($this->once())->method('remove')->with($tmpDir);
 

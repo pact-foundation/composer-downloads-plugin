@@ -42,28 +42,16 @@ class FileHandler extends BaseHandler
         $target = $this->subpackage->getTargetPath();
         $downloadManager = $composer->getDownloadManager();
 
-        // composer:v2
-        if ($this->isComposerV2()) {
-            $file = '';
-            $promise = $downloadManager->download($this->subpackage, \dirname($target));
-            $promise->then(static function ($res) use (&$file) {
-                $file = $res;
-            });
-            $composer->getLoop()->wait([$promise]);
-            // Look like Composer v2 doesn't care about $target above.
-            // It download the file to "vendor/composer/tmp-[random-file-name]"
-            // We need to move the file to where we want.
-            $this->filesystem->rename($file, $target);
-        }
-        // composer:v1
-        else {
-            // Composer v1 empty the target directory. So we need to create new temporary directory.
-            $tmpDir = \dirname($target).\DIRECTORY_SEPARATOR.uniqid(self::TMP_PREFIX, true);
-            $this->filesystem->ensureDirectoryExists($tmpDir);
-            // Download manager doesn't return the file, so we ask file downloader to do it instead.
-            $file = $downloadManager->getDownloader('file')->download($this->subpackage, $tmpDir);
-            $this->filesystem->rename($file, $target);
-            $this->filesystem->remove($tmpDir);
-        }
+        $file = '';
+        $promise = $downloadManager->download($this->subpackage, \dirname($target));
+        $promise->then(static function ($res) use (&$file) {
+            $file = $res;
+            return \React\Promise\resolve($res);
+        });
+        $composer->getLoop()->wait([$promise]);
+        // Look like Composer v2 doesn't care about $target above.
+        // It download the file to "vendor/composer/tmp-[random-file-name]"
+        // We need to move the file to where we want.
+        $this->filesystem->rename($file, $target);
     }
 }
