@@ -46,6 +46,7 @@ class FileHandler extends BaseHandler
         $promise = $downloadManager->download($this->subpackage, \dirname($target));
         $promise->then(static function ($res) use (&$file) {
             $file = $res;
+
             return \React\Promise\resolve($res);
         });
         $composer->getLoop()->wait([$promise]);

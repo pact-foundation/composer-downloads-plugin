@@ -28,7 +28,8 @@
         "composer/composer": "^2.2",
         "phpunit/phpunit": "^9.5.10",
         "symfony/process": "^6.0 || ^7.0",
-        "php-vfs/php-vfs": "^1.4"
+        "php-vfs/php-vfs": "^1.4",
+        "friendsofphp/php-cs-fixer": "^3.51"
     },
     "autoload": {
         "psr-4": {

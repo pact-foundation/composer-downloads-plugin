@@ -2,7 +2,6 @@
 
 namespace LastCall\DownloadsPlugin\Tests\Unit;
 
-use Composer\Downloader\FileDownloader;
 use Composer\Util\Filesystem;
 use LastCall\DownloadsPlugin\Handler\FileHandler;
 use LastCall\DownloadsPlugin\Subpackage;
