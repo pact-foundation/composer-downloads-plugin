@@ -21,7 +21,6 @@ jobs:
         php: [8.1, 8.2, 8.3]
         os: [windows-latest]
         dependencies: [ 'lowest', 'highest' ]
-    continue-on-error: ${{ matrix.os == 'windows-latest' && matrix.php != '8.1' }}
     name: PHP ${{ matrix.php }} - OS ${{ matrix.os }} - Dependencies ${{ matrix.dependencies }}
     steps:
       - uses: actions/checkout@v3
@@ -37,11 +36,9 @@ jobs:
       - name: Install unrar on MacOS
         run: brew install rar
         if: ${{ matrix.os == 'macos-latest' }}
-      - name: Install pacman dependencies (Windows)
+      - name: Install unrar on Windows
         shell: cmd
-        run: |
-          set "PATH=%PATH%;c:\msys64\usr\bin"
-          pacman -S --noconfirm --needed unrar
+        run: choco install unrar
         if: ${{ matrix.os == 'windows-latest' }}
       - name: Validate composer.json
         run: composer validate
@@ -49,14 +46,8 @@ jobs:
         with:
           dependency-versions: ${{ matrix.dependencies }}
           composer-options: "--no-progress --no-suggest"
-      - name: Run tests (*NIX)
+      - name: Run tests
         run: ./vendor/bin/phpunit
-        if: ${{ matrix.os != 'windows-latest' }}
-      - name: Run tests (Windows)
-        run: |
-          set "PATH=%PATH%;c:\msys64\usr\bin"
-          ./vendor/bin/phpunit
-        if: ${{ matrix.os == 'windows-latest' }}
       - name: Upload coverage results to Coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
