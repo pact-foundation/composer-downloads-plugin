@@ -7,7 +7,7 @@ use LastCall\DownloadsPlugin\Exception\UnexpectedValueException;
 
 abstract class BaseFilter implements FilterInterface
 {
-    private null|string|array $cache = null;
+    private string|array|null $cache = null;
 
     public function __construct(
         protected string $subpackageName,
