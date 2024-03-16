@@ -76,9 +76,6 @@ abstract class CommandTestCase extends TestCase
                     'text' => [
                         'url' => 'http://localhost:8000/archive/text.tar',
                     ],
-                    'image' => [
-                        'url' => 'http://localhost:8000/archive/image.rar',
-                    ],
                     'xml' => [
                         'url' => 'http://localhost:8000/archive/empty.xml.gz',
                         'path' => 'files/markup/empty.xml',
@@ -148,10 +145,6 @@ abstract class CommandTestCase extends TestCase
             'files/text/empty.csv' => 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855',
             'files/text/empty.json' => 'ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356',
             'files/text/empty.txt' => 'b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46',
-            'files/image/empty.bmp' => '1a011d90fff8ac4b581f95472633c311a50143ba5e1020fcd9d578fe921d7c99',
-            'files/image/empty.gif' => '84f7a1205ca382c044859ada51473fda5d972083f0ab5caf0e61309e2fbbc5d1',
-            'files/image/empty.jpg' => 'dc0918fcf7dc57eaef1b0bb69bc1b88e1d10422a38e367565e001306407e41ac',
-            'files/image/empty.png' => '2024896e28f508d6b695fffad2531a2718c1e46b6c2c924d9b77f10ac2688793',
             'files/markup/empty.html' => '5e2ab2f655e9378fd1e54a4bfd81cece72a3bdeb04c87be86041962fe5c3bd3c',
             'files/markup/empty.xml' => '4be690ad5983b2a40f640481fdb27dcc43ac162e14fa9aab2ff45775521d9213',
             'vendor/bin/hello' => false,

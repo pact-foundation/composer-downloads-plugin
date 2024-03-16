@@ -99,8 +99,8 @@ class UrlFilterTest extends BaseFilterTestCase
     public function getFilterUrlTests(): array
     {
         return [
-            ['http://example/file.rar', [], 'http://example/file.rar'],
-            ['http://example/file-{$version}.rar', ['{$version}' => '1.2.3'], 'http://example/file-1.2.3.rar'],
+            ['http://example/file.zip', [], 'http://example/file.zip'],
+            ['http://example/file-{$version}.zip', ['{$version}' => '1.2.3'], 'http://example/file-1.2.3.zip'],
         ];
     }
 

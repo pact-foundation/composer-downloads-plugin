@@ -25,7 +25,6 @@ class TypeFilterTest extends BaseFilterTestCase
             ['http://example.com/file.tar.bz2', Types::TYPE_TAR],
             ['http://example.com/file.tar.xz', Types::TYPE_XZ],
             ['http://example.com/file.zip', Types::TYPE_ZIP],
-            ['http://example.com/file.rar', Types::TYPE_RAR],
             ['http://example.com/file.tgz', Types::TYPE_TAR],
             ['http://example.com/file.tar', Types::TYPE_TAR],
             ['http://example.com/file.gz', Types::TYPE_GZIP],
