@@ -27,31 +27,24 @@ abstract class ArchiveHandlerTestCase extends BaseHandlerTestCase
     protected function assertDownload(): void
     {
         $this->composer->expects($this->once())->method('getDownloadManager')->willReturn($this->downloadManager);
-        if ($this->isComposerV2) {
-            $this->downloadManager
-                ->expects($this->once())
-                ->method('download')
-                ->with($this->isInstanceOf(Subpackage::class), $this->targetPath)
-                ->willReturn($this->downloadPromise);
-            $this->downloadManager
-                ->expects($this->once())
-                ->method('install')
-                ->with($this->isInstanceOf(Subpackage::class), $this->targetPath)
-                ->willReturn($this->installPromise);
-            $this->loop
-                ->expects($this->exactly(2))
-                ->method('wait')
-                ->withConsecutive(
-                    [[$this->downloadPromise]],
-                    [[$this->installPromise]]
-                );
-            $this->composer->expects($this->exactly(2))->method('getLoop')->willReturn($this->loop);
-        } else {
-            $this->downloadManager
-                ->expects($this->once())
-                ->method('download')
-                ->with($this->isInstanceOf(Subpackage::class), $this->targetPath);
-        }
+        $this->downloadManager
+            ->expects($this->once())
+            ->method('download')
+            ->with($this->isInstanceOf(Subpackage::class), $this->targetPath)
+            ->willReturn($this->downloadPromise);
+        $this->downloadManager
+            ->expects($this->once())
+            ->method('install')
+            ->with($this->isInstanceOf(Subpackage::class), $this->targetPath)
+            ->willReturn($this->installPromise);
+        $this->loop
+            ->expects($this->exactly(2))
+            ->method('wait')
+            ->withConsecutive(
+                [[$this->downloadPromise]],
+                [[$this->installPromise]]
+            );
+        $this->composer->expects($this->exactly(2))->method('getLoop')->willReturn($this->loop);
         $this->cleaner->expects($this->once())->method('clean')->with($this->targetPath, $this->ignore);
     }
 

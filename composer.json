@@ -18,17 +18,18 @@
         }
     ],
     "require": {
-        "composer-plugin-api": "^1.1 || ^2.0",
-        "php": "^8.0",
+        "composer-plugin-api": "^2.0",
+        "php": "^8.1",
         "leongrdic/smplang": "^1.0.2",
-        "symfony/filesystem": "^5.4 || ^6.0",
-        "symfony/finder": "^4.4.23 || ^5.4 || ^6.0"
+        "symfony/filesystem": "^5.4 || ^6.4 || ^7.0",
+        "symfony/finder": "^5.4 || ^6.4 || ^7.0"
     },
     "require-dev": {
-        "composer/composer": "^1.10.26 || ^2.2",
+        "composer/composer": "^2.3",
         "phpunit/phpunit": "^9.5.10",
-        "symfony/process": "^4.4 || ^5.4 || ^6.0",
-        "php-vfs/php-vfs": "^1.4"
+        "symfony/process": "^5.4 || ^6.4 || ^7.0",
+        "php-vfs/php-vfs": "^1.4",
+        "friendsofphp/php-cs-fixer": "^3.51"
     },
     "autoload": {
         "psr-4": {

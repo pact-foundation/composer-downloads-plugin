@@ -60,11 +60,6 @@ abstract class BaseHandler implements HandlerInterface
         ];
     }
 
-    protected function isComposerV2(): bool
-    {
-        return version_compare(Composer::RUNTIME_API_VERSION, '2.0.0') >= 0;
-    }
-
     public function install(Composer $composer, IOInterface $io): void
     {
         $this->download($composer, $io);

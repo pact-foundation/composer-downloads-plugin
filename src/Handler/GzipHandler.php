@@ -15,14 +15,10 @@ class GzipHandler extends FileHandler
 
         $this->filesystem->ensureDirectoryExists($tmpDir);
         // In composer:v2, download and extract were separated.
-        if ($this->isComposerV2()) {
-            $promise = $downloadManager->download($this->subpackage, $tmpDir);
-            $composer->getLoop()->wait([$promise]);
-            $promise = $downloadManager->install($this->subpackage, $tmpDir);
-            $composer->getLoop()->wait([$promise]);
-        } else {
-            $downloadManager->download($this->subpackage, $tmpDir);
-        }
+        $promise = $downloadManager->download($this->subpackage, $tmpDir);
+        $composer->getLoop()->wait([$promise]);
+        $promise = $downloadManager->install($this->subpackage, $tmpDir);
+        $composer->getLoop()->wait([$promise]);
         $this->filesystem->rename($tmpDir.\DIRECTORY_SEPARATOR.$targetName, $this->subpackage->getTargetPath());
         $this->filesystem->remove($tmpDir);
     }

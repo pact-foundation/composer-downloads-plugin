@@ -25,7 +25,6 @@ abstract class BaseHandlerTestCase extends TestCase
     protected Loop|MockObject $loop;
     private Subpackage $subpackage;
     private HandlerInterface $handler;
-    protected bool $isComposerV2;
     private string $parentPath = '/path/to/package';
     protected string $id = 'sub-package-name';
     protected string $url = 'http://example.com/file.ext';
@@ -41,12 +40,9 @@ abstract class BaseHandlerTestCase extends TestCase
         $this->io = $this->createMock(IOInterface::class);
         $this->downloadManager = $this->createMock(DownloadManager::class);
         $this->binariesInstaller = $this->createMock(BinariesInstaller::class);
-        $this->isComposerV2 = version_compare(Composer::RUNTIME_API_VERSION, '2.0.0') >= 0;
-        if ($this->isComposerV2) {
-            $this->downloadPromise = $this->createMock(PromiseInterface::class);
-            $this->installPromise = $this->createMock(PromiseInterface::class);
-            $this->loop = $this->createMock(Loop::class);
-        }
+        $this->downloadPromise = $this->createMock(PromiseInterface::class);
+        $this->installPromise = $this->createMock(PromiseInterface::class);
+        $this->loop = $this->createMock(Loop::class);
         $this->extraFile = [
             'id' => $this->id,
             'url' => $this->url,
