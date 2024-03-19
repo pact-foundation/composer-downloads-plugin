@@ -5,6 +5,7 @@ namespace LastCall\DownloadsPlugin\Filter;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
 use Composer\Package\Version\VersionParser;
+use LastCall\DownloadsPlugin\Model\Version;
 
 class VersionFilter extends BaseFilter
 {
@@ -21,7 +22,7 @@ class VersionFilter extends BaseFilter
         $this->versionParser = $versionParser ?? new VersionParser();
     }
 
-    protected function get(array $extraFile): array
+    protected function get(array $extraFile): Version
     {
         if (isset($extraFile['version'])) {
             $value = $extraFile['version'];
@@ -40,6 +41,6 @@ class VersionFilter extends BaseFilter
             $prettyVersion = $this->parent->getPrettyVersion();
         }
 
-        return [$version, $prettyVersion];
+        return new Version($version, $prettyVersion);
     }
 }

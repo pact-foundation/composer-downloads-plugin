@@ -9,6 +9,7 @@ use Composer\Package\Package;
 use Composer\Util\Loop;
 use LastCall\DownloadsPlugin\BinariesInstaller;
 use LastCall\DownloadsPlugin\Handler\HandlerInterface;
+use LastCall\DownloadsPlugin\Model\Version;
 use LastCall\DownloadsPlugin\Subpackage;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -58,8 +59,7 @@ abstract class BaseHandlerTestCase extends TestCase
             $this->ignore,
             $this->url,
             $this->path,
-            '1.2.3.0',
-            'v1.2.3'
+            new Version('1.2.3.0', 'v1.2.3'),
         );
         $this->handler = $this->createHandler();
     }

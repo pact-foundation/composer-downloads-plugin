@@ -6,6 +6,7 @@ use Composer\Package\RootPackage;
 use Composer\Package\Version\VersionParser;
 use LastCall\DownloadsPlugin\Filter\FilterInterface;
 use LastCall\DownloadsPlugin\Filter\VersionFilter;
+use LastCall\DownloadsPlugin\Model\Version;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class VersionFilterTest extends BaseFilterTestCase
@@ -50,9 +51,8 @@ class VersionFilterTest extends BaseFilterTestCase
         $this->parent->expects($this->once())->method('getVersion')->willReturn($this->version);
         $this->parent->expects($this->once())->method('getPrettyVersion')->willReturn($this->prettyVersion);
         $this->versionParser->expects($this->never())->method('normalize');
-        $expectedValue = [$this->version, $this->prettyVersion];
-        $this->assertSame($expectedValue, $this->filter->filter([]));
-        $this->assertSame($expectedValue, $this->filter->filter(['cached']));
+        $this->assertVersion($this->filter->filter([]), $this->version, $this->prettyVersion);
+        $this->assertVersion($this->filter->filter(['cached']), $this->version, $this->prettyVersion);
     }
 
     public function testVersionFromParentRootPackage(): void
@@ -62,9 +62,8 @@ class VersionFilterTest extends BaseFilterTestCase
         $this->parent->expects($this->never())->method('getVersion');
         $this->parent->expects($this->never())->method('getPrettyVersion');
         $this->versionParser->expects($this->once())->method('normalize')->with('dev-master')->willReturn('9999999-dev');
-        $expectedValue = ['9999999-dev', 'dev-master'];
-        $this->assertSame($expectedValue, $filter->filter([]));
-        $this->assertSame($expectedValue, $filter->filter(['cached']));
+        $this->assertVersion($filter->filter([]), '9999999-dev', 'dev-master');
+        $this->assertVersion($filter->filter(['cached']), '9999999-dev', 'dev-master');
     }
 
     public function testCustomVersion(): void
@@ -72,13 +71,18 @@ class VersionFilterTest extends BaseFilterTestCase
         $this->parent->expects($this->never())->method('getVersion');
         $this->parent->expects($this->never())->method('getPrettyVersion');
         $this->versionParser->expects($this->once())->method('normalize')->with('dev-master')->willReturn('9999999-dev');
-        $expectedValue = ['9999999-dev', '1.2.3'];
-        $this->assertSame($expectedValue, $this->filter->filter(['version' => '1.2.3']));
-        $this->assertSame($expectedValue, $this->filter->filter([]));
+        $this->assertVersion($this->filter->filter(['version' => '1.2.3']), '9999999-dev', '1.2.3');
+        $this->assertVersion($this->filter->filter([]), '9999999-dev', '1.2.3');
     }
 
     protected function createFilter(): FilterInterface
     {
         return new VersionFilter($this->name, $this->parent, $this->versionParser);
+    }
+
+    private function assertVersion(Version $version, string $expectedVersion, string $expectedPrettyVersion): void
+    {
+        $this->assertSame($expectedVersion, $version->version);
+        $this->assertSame($expectedPrettyVersion, $version->prettyVersion);
     }
 }

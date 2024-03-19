@@ -13,6 +13,7 @@ namespace LastCall\DownloadsPlugin;
 
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Model\Version;
 
 /**
  * Class Subpackage.
@@ -28,13 +29,12 @@ class Subpackage extends Package
         private array $ignore,
         string $url,
         string $path,
-        string $version,
-        string $prettyVersion,
+        Version $version,
     ) {
         parent::__construct(
             sprintf('%s:%s', $parent->getName(), $subpackageName),
-            $version,
-            $prettyVersion
+            $version->version,
+            $version->prettyVersion
         );
         $this->setDistUrl($url);
         $this->setDistType(Types::mapTypeToDistType($subpackageType));
