@@ -25,7 +25,7 @@ abstract class BaseFilterTestCase extends TestCase
     protected function expectUnexpectedValueException(string $attribute, string $reason): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectDeprecationMessage(sprintf('Attribute "%s" of extra file "%s" defined in package "%s" %s.', $attribute, $this->name, $this->parentName, $reason));
+        $this->expectExceptionMessage(sprintf('Attribute "%s" of extra file "%s" defined in package "%s" %s.', $attribute, $this->name, $this->parentName, $reason));
     }
 
     abstract protected function createFilter(): FilterInterface;
