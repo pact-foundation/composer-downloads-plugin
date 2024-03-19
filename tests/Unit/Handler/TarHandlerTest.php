@@ -1,9 +1,8 @@
 <?php
 
-namespace LastCall\DownloadsPlugin\Tests\Unit;
+namespace LastCall\DownloadsPlugin\Tests\Unit\Handler;
 
 use LastCall\DownloadsPlugin\Handler\TarHandler;
-use LastCall\DownloadsPlugin\Tests\Unit\Handler\ArchiveHandlerTestCase;
 
 class TarHandlerTest extends ArchiveHandlerTestCase
 {

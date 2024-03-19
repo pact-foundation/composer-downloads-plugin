@@ -3,6 +3,7 @@
 namespace LastCall\DownloadsPlugin\Tests\Unit;
 
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Model\Hash;
 use LastCall\DownloadsPlugin\Model\Version;
 use LastCall\DownloadsPlugin\Subpackage;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -33,7 +34,18 @@ class SubpackageTest extends TestCase
         $this->parent = $this->createMock(PackageInterface::class);
     }
 
-    public function testInstance(): void
+    public function hashDataProvider(): array
+    {
+        return [
+            [null],
+            [new Hash('name', 'value')],
+        ];
+    }
+
+    /**
+     * @dataProvider hashDataProvider
+     */
+    public function testInstance(?Hash $hash): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
         $subpackage = new Subpackage(
@@ -45,7 +57,8 @@ class SubpackageTest extends TestCase
             $this->ignore,
             $this->url,
             $this->path,
-            new Version($this->version, $this->prettyVersion)
+            new Version($this->version, $this->prettyVersion),
+            $hash
         );
         $this->assertSame(sprintf('%s:%s', $this->parentName, $this->subpackageName), $subpackage->getName());
         $this->assertSame($this->version, $subpackage->getVersion());
@@ -60,5 +73,6 @@ class SubpackageTest extends TestCase
         $this->assertSame($this->ignore, $subpackage->getIgnore());
         $this->assertSame($this->parentPath, $subpackage->getParentPath());
         $this->assertSame($this->parentPath.\DIRECTORY_SEPARATOR.$this->path, $subpackage->getTargetPath());
+        $this->assertSame($hash, $subpackage->getHash());
     }
 }

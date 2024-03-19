@@ -1,9 +1,8 @@
 <?php
 
-namespace LastCall\DownloadsPlugin\Tests\Unit;
+namespace LastCall\DownloadsPlugin\Tests\Unit\Handler;
 
 use LastCall\DownloadsPlugin\Handler\XzHandler;
-use LastCall\DownloadsPlugin\Tests\Unit\Handler\ArchiveHandlerTestCase;
 
 class XzHandlerTest extends ArchiveHandlerTestCase
 {
