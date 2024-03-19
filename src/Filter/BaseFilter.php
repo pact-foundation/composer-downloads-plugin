@@ -7,7 +7,7 @@ use LastCall\DownloadsPlugin\Exception\UnexpectedValueException;
 
 abstract class BaseFilter implements FilterInterface
 {
-    private string|array|null $cache = null;
+    private mixed $cache = null;
 
     public function __construct(
         protected string $subpackageName,
@@ -15,7 +15,7 @@ abstract class BaseFilter implements FilterInterface
     ) {
     }
 
-    public function filter(array $extraFile): string|array
+    public function filter(array $extraFile): mixed
     {
         if (null !== $this->cache) {
             return $this->cache;
@@ -24,7 +24,7 @@ abstract class BaseFilter implements FilterInterface
         return $this->cache = $this->get($extraFile);
     }
 
-    abstract protected function get(array $extraFile): string|array;
+    abstract protected function get(array $extraFile): mixed;
 
     protected function throwException(string $attribute, string $reason): void
     {

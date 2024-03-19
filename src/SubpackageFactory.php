@@ -23,7 +23,7 @@ class SubpackageFactory
         $ignore = $filterManager->get(FilterManager::IGNORE)->filter($extraFile);
         $url = $filterManager->get(FilterManager::URL)->filter($extraFile);
         $path = $filterManager->get(FilterManager::PATH)->filter($extraFile);
-        [$version, $prettyVersion] = $filterManager->get(FilterManager::VERSION)->filter($extraFile);
+        $version = $filterManager->get(FilterManager::VERSION)->filter($extraFile);
         $type = $filterManager->get(FilterManager::TYPE)->filter($extraFile);
 
         return new Subpackage(
@@ -36,7 +36,6 @@ class SubpackageFactory
             $url,
             $path,
             $version,
-            $prettyVersion
         );
     }
 

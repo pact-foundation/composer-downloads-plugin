@@ -3,6 +3,7 @@
 namespace LastCall\DownloadsPlugin\Tests\Unit;
 
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Model\Version;
 use LastCall\DownloadsPlugin\Subpackage;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -44,8 +45,7 @@ class SubpackageTest extends TestCase
             $this->ignore,
             $this->url,
             $this->path,
-            $this->version,
-            $this->prettyVersion
+            new Version($this->version, $this->prettyVersion)
         );
         $this->assertSame(sprintf('%s:%s', $this->parentName, $this->subpackageName), $subpackage->getName());
         $this->assertSame($this->version, $subpackage->getVersion());
