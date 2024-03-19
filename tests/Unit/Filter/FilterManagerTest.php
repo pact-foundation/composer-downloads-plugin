@@ -12,7 +12,6 @@ use LastCall\DownloadsPlugin\Filter\TypeFilter;
 use LastCall\DownloadsPlugin\Filter\UrlFilter;
 use LastCall\DownloadsPlugin\Filter\VariablesFilter;
 use LastCall\DownloadsPlugin\Filter\VersionFilter;
-use LastCall\DownloadsPlugin\Handler\ArchiveHandler;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -21,13 +20,12 @@ class FilterManagerTest extends TestCase
     private PackageInterface|MockObject $parent;
     private string $subpackageName = 'normal-file';
     private string $parentPath = 'path/to/vendor/parent-package';
-    private string $handlerClass = ArchiveHandler::class;
     private FilterManager $manager;
 
     protected function setUp(): void
     {
         $this->parent = $this->createMock(PackageInterface::class);
-        $this->manager = new FilterManager($this->subpackageName, $this->parent, $this->parentPath, $this->handlerClass);
+        $this->manager = new FilterManager($this->subpackageName, $this->parent, $this->parentPath);
     }
 
     public function getValidFilterTests(): array
