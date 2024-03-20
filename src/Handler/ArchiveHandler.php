@@ -3,7 +3,6 @@
 namespace LastCall\DownloadsPlugin\Handler;
 
 use Composer\Composer;
-use Composer\IO\IOInterface;
 use Composer\Util\Filesystem;
 use LastCall\DownloadsPlugin\BinariesInstaller;
 use LastCall\DownloadsPlugin\GlobCleaner;
@@ -47,11 +46,10 @@ abstract class ArchiveHandler extends BaseHandler
         return ['ignore' => $ignore] + parent::getChecksumData();
     }
 
-    protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void
+    protected function handleDownloadedFile(Composer $composer, string $file): void
     {
         $this->extract($composer, $this->subpackage->getTargetPath());
         $this->clean();
-        $this->installBinaries($io);
     }
 
     private function clean(): void

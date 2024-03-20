@@ -70,15 +70,16 @@ abstract class BaseHandler implements HandlerInterface
     {
         $file = $this->download($composer);
         if ($this->validateDownloadedFile($file)) {
-            $this->handleDownloadedFile($composer, $io, $file);
+            $this->handleDownloadedFile($composer, $file);
+            $this->installBinaries($io);
         } else {
             $this->handleInvalidDownloadedFile($file);
         }
     }
 
-    abstract protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void;
+    abstract protected function handleDownloadedFile(Composer $composer, string $file): void;
 
-    protected function installBinaries(IOInterface $io): void
+    private function installBinaries(IOInterface $io): void
     {
         $this->binariesInstaller->install($this->subpackage, $io);
     }

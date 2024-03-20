@@ -3,7 +3,6 @@
 namespace LastCall\DownloadsPlugin\Handler;
 
 use Composer\Composer;
-use Composer\IO\IOInterface;
 
 class FileHandler extends BaseHandler
 {
@@ -20,9 +19,8 @@ class FileHandler extends BaseHandler
             \DIRECTORY_SEPARATOR.$file;
     }
 
-    protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void
+    protected function handleDownloadedFile(Composer $composer, string $file): void
     {
         $this->move($file);
-        $this->installBinaries($io);
     }
 }
