@@ -47,16 +47,11 @@ abstract class ArchiveHandler extends BaseHandler
         return ['ignore' => $ignore] + parent::getChecksumData();
     }
 
-    public function install(Composer $composer, IOInterface $io): void
+    protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void
     {
-        $file = $this->download($composer);
-        if ($this->validateDownloadedFile($file)) {
-            $this->extract($composer, $this->subpackage->getTargetPath());
-            $this->clean();
-            $this->installBinaries($composer, $io);
-        } else {
-            $this->handleInvalidDownloadedFile($file);
-        }
+        $this->extract($composer, $this->subpackage->getTargetPath());
+        $this->clean();
+        $this->installBinaries($composer, $io);
     }
 
     private function clean(): void

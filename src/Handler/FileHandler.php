@@ -20,16 +20,9 @@ class FileHandler extends BaseHandler
             \DIRECTORY_SEPARATOR.$file;
     }
 
-    public function install(Composer $composer, IOInterface $io): void
+    protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void
     {
-        // We want to take advantage of the cache in composer's downloader, but it
-        // doesn't put the file the spot we want, so we shuffle a bit.
-        $file = $this->download($composer);
-        if ($this->validateDownloadedFile($file)) {
-            $this->move($file);
-            $this->installBinaries($composer, $io);
-        } else {
-            $this->handleInvalidDownloadedFile($file);
-        }
+        $this->move($file);
+        $this->installBinaries($composer, $io);
     }
 }

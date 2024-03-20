@@ -66,6 +66,18 @@ abstract class BaseHandler implements HandlerInterface
         ];
     }
 
+    public function install(Composer $composer, IOInterface $io): void
+    {
+        $file = $this->download($composer);
+        if ($this->validateDownloadedFile($file)) {
+            $this->handleDownloadedFile($composer, $io, $file);
+        } else {
+            $this->handleInvalidDownloadedFile($file);
+        }
+    }
+
+    abstract protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void;
+
     protected function installBinaries(Composer $composer, IOInterface $io): void
     {
         $this->binariesInstaller->install($this->subpackage, $io);
@@ -74,7 +86,7 @@ abstract class BaseHandler implements HandlerInterface
     /**
      * Download file to temporary place ("vendor/composer/tmp-[random-file-name]"), return downloaded file's path.
      */
-    protected function download(Composer $composer): string
+    private function download(Composer $composer): string
     {
         $downloadManager = $composer->getDownloadManager();
 
@@ -90,7 +102,7 @@ abstract class BaseHandler implements HandlerInterface
         return $file;
     }
 
-    protected function validateDownloadedFile(string $filePath): bool
+    private function validateDownloadedFile(string $filePath): bool
     {
         $hash = $this->subpackage->getHash();
 
@@ -122,7 +134,7 @@ abstract class BaseHandler implements HandlerInterface
         $composer->getLoop()->wait([$promise]);
     }
 
-    protected function handleInvalidDownloadedFile(string $file): void
+    private function handleInvalidDownloadedFile(string $file): void
     {
         $this->remove($file);
         throw new InvalidDownloadedFileException(sprintf('Extra file "%s" does not match hash value defined in "%s".', $this->subpackage->getDistUrl(), $this->subpackage->getSubpackageName()));
