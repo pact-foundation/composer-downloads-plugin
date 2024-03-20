@@ -51,7 +51,7 @@ abstract class ArchiveHandler extends BaseHandler
     {
         $this->extract($composer, $this->subpackage->getTargetPath());
         $this->clean();
-        $this->installBinaries($composer, $io);
+        $this->installBinaries($io);
     }
 
     private function clean(): void

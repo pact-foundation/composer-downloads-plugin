@@ -23,6 +23,6 @@ class FileHandler extends BaseHandler
     protected function handleDownloadedFile(Composer $composer, IOInterface $io, string $file): void
     {
         $this->move($file);
-        $this->installBinaries($composer, $io);
+        $this->installBinaries($io);
     }
 }

@@ -14,7 +14,7 @@ class GzipHandler extends FileHandler
 
         $this->extract($composer, $tmpDir);
         $this->move($tmpDir.\DIRECTORY_SEPARATOR.$targetName);
-        $this->installBinaries($composer, $io);
+        $this->installBinaries($io);
         $this->remove($tmpDir);
     }
 }
