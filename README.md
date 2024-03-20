@@ -27,7 +27,11 @@ Suppose your PHP package `foo/bar` relies on an external archive file (`examplel
             "{$architecture}": "strtolower(php_uname('m'))",
             "{$extension}": "PHP_OS_FAMILY === 'Windows' ? 'zip' : 'tar.gz'",
         },
-        "ignore": ["tests", "doc", "*.md"]
+        "ignore": ["tests", "doc", "*.md"],
+        "hash": {
+          "algo": "sha256",
+          "value": "08fbce50f84d89fdf1fdef425c7dd1a13c5c023fa87f453ba77db4df27d273c0"
+        }
       }
     }
   }
@@ -67,6 +71,10 @@ When a downstream user of `foo/bar` runs `composer require foo/bar`, it will dow
   * It can be used as a variable.
 
 * `variables`: (*Optional*) List of custom variables.
+
+* `hash`: (*Optional*) Verify contents of the file downloaded from `url`. If hash values are not the same: file will be **deleted** & composer will **throw exception**.
+  * `algo`: Name of selected hashing algorithm (i.e. "md5", "sha256", "haval160,4", etc..). For a list of supported algorithms see `hash_algos()`
+  * `value`: Expected value of hash function
 
 ## Variables
 

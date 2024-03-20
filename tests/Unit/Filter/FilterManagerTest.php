@@ -6,6 +6,7 @@ use Composer\Package\PackageInterface;
 use LastCall\DownloadsPlugin\Exception\OutOfRangeException;
 use LastCall\DownloadsPlugin\Filter\ExecutableFilter;
 use LastCall\DownloadsPlugin\Filter\FilterManager;
+use LastCall\DownloadsPlugin\Filter\HashFilter;
 use LastCall\DownloadsPlugin\Filter\IgnoreFilter;
 use LastCall\DownloadsPlugin\Filter\PathFilter;
 use LastCall\DownloadsPlugin\Filter\TypeFilter;
@@ -38,6 +39,7 @@ class FilterManagerTest extends TestCase
             ['executable', ExecutableFilter::class],
             ['ignore', IgnoreFilter::class],
             ['type', TypeFilter::class],
+            ['hash', HashFilter::class],
         ];
     }
 

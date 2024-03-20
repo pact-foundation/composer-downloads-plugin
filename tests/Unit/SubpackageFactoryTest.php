@@ -5,6 +5,7 @@ namespace LastCall\DownloadsPlugin\Tests\Unit;
 use Composer\Composer;
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Model\Hash;
 use LastCall\DownloadsPlugin\Subpackage;
 use LastCall\DownloadsPlugin\SubpackageFactory;
 use PHPUnit\Framework\TestCase;
@@ -38,6 +39,14 @@ class SubpackageFactoryTest extends TestCase
                 ],
                 'path' => 'path/to/dir',
             ],
+            'file4' => [
+                'type' => 'file',
+                'url' => 'http://example.com/file.ext',
+                'hash' => [
+                    'algo' => 'md5',
+                    'value' => 'text',
+                ],
+            ],
         ],
     ];
     private string $parentPath = '/path/to/vendor/package-name';
@@ -55,7 +64,7 @@ class SubpackageFactoryTest extends TestCase
             $this->parent,
             $this->parentPath
         );
-        $this->assertCount(3, $subpackages);
+        $this->assertCount(4, $subpackages);
         $version = version_compare(Composer::RUNTIME_API_VERSION, '2.0.0') >= 0 ? 'dev-master' : '9999999-dev';
         $this->assertSubpackage(
             $subpackages[0],
@@ -99,6 +108,19 @@ class SubpackageFactoryTest extends TestCase
                 '!dir/file1',
             ]
         );
+        $this->assertSubpackage(
+            $subpackages[3],
+            'file4',
+            'file',
+            '1.0.0',
+            'v1.0.0',
+            'http://example.com/file.ext',
+            'file',
+            'common/path/to/dir',
+            [],
+            [],
+            new Hash('md5', 'text')
+        );
     }
 
     private function assertSubpackage(
@@ -111,7 +133,8 @@ class SubpackageFactoryTest extends TestCase
         string $distType,
         string $path,
         array $executable,
-        array $ignore
+        array $ignore,
+        ?Hash $hash = null
     ): void {
         $this->assertSame(sprintf('vendor/package-name:%s', $subpackageName), $subpackage->getName());
         $this->assertSame($version, $subpackage->getVersion());
@@ -125,5 +148,11 @@ class SubpackageFactoryTest extends TestCase
         $this->assertSame($ignore, $subpackage->getIgnore());
         $this->assertSame($subpackageType, $subpackage->getSubpackageType());
         $this->assertSame($this->parentPath.\DIRECTORY_SEPARATOR.$path, $subpackage->getTargetPath());
+        if ($hash) {
+            $this->assertSame($hash->algo, $subpackage->getHash()->algo);
+            $this->assertSame($hash->value, $subpackage->getHash()->value);
+        } else {
+            $this->assertNull($subpackage->getHash());
+        }
     }
 }

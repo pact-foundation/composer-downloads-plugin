@@ -3,7 +3,6 @@
 namespace LastCall\DownloadsPlugin\Tests\Unit\Handler;
 
 use LastCall\DownloadsPlugin\GlobCleaner;
-use LastCall\DownloadsPlugin\Subpackage;
 use PHPUnit\Framework\MockObject\MockObject;
 
 abstract class ArchiveHandlerTestCase extends BaseHandlerTestCase
@@ -24,30 +23,6 @@ abstract class ArchiveHandlerTestCase extends BaseHandlerTestCase
         return [$this->cleaner];
     }
 
-    protected function assertDownload(): void
-    {
-        $this->composer->expects($this->once())->method('getDownloadManager')->willReturn($this->downloadManager);
-        $this->downloadManager
-            ->expects($this->once())
-            ->method('download')
-            ->with($this->isInstanceOf(Subpackage::class), $this->targetPath)
-            ->willReturn($this->downloadPromise);
-        $this->downloadManager
-            ->expects($this->once())
-            ->method('install')
-            ->with($this->isInstanceOf(Subpackage::class), $this->targetPath)
-            ->willReturn($this->installPromise);
-        $this->loop
-            ->expects($this->exactly(2))
-            ->method('wait')
-            ->withConsecutive(
-                [[$this->downloadPromise]],
-                [[$this->installPromise]]
-            );
-        $this->composer->expects($this->exactly(2))->method('getLoop')->willReturn($this->loop);
-        $this->cleaner->expects($this->once())->method('clean')->with($this->targetPath, $this->ignore);
-    }
-
     protected function getTrackingFile(): string
     {
         return $this->targetPath.\DIRECTORY_SEPARATOR.'.composer-downloads'.\DIRECTORY_SEPARATOR.'sub-package-name-4fcb9a7a2ac376c89d1d147894dca87b.json';
@@ -66,5 +41,49 @@ abstract class ArchiveHandlerTestCase extends BaseHandlerTestCase
             'url' => $this->url,
             'checksum' => $this->getChecksum(),
         ];
+    }
+
+    /**
+     * @testWith [true, true]
+     *           [true, false]
+     *           [false, true]
+     */
+    public function testInstall(bool $hasHash, bool $isValid): void
+    {
+        $this->assertDownload();
+        $this->assertValidateDownloadedFile($hasHash, $isValid);
+        $this->assertExtract($isValid);
+        $this->assertBinariesInstaller($isValid);
+        $this->assertClean($isValid);
+        $this->assertRemoveDownloadedFile($isValid);
+        $this->expectInvalidDownloadedFileException($isValid);
+        $this->handler->install($this->composer, $this->io);
+    }
+
+    private function assertExtract(bool $isValid): void
+    {
+        if ($isValid) {
+            $this->downloadManager
+                ->expects($this->once())
+                ->method('install')
+                ->with($this->subpackage, $this->targetPath)
+                ->willReturn($this->installPromise);
+            $this->loop
+                ->expects($this->at(1))
+                ->method('wait')
+                ->with([$this->installPromise]);
+        } else {
+            $this->downloadManager
+                ->expects($this->never())
+                ->method('install');
+        }
+    }
+
+    private function assertClean(bool $isValid): void
+    {
+        $this->cleaner
+            ->expects($this->exactly($isValid))
+            ->method('clean')
+            ->with($this->targetPath, $this->ignore);
     }
 }

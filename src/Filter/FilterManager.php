@@ -14,6 +14,7 @@ class FilterManager
     public const VERSION = 'version';
     public const EXECUTABLE = 'executable';
     public const IGNORE = 'ignore';
+    public const HASH = 'hash';
 
     private array $filters;
 
@@ -30,6 +31,7 @@ class FilterManager
             self::TYPE => $typeFilter = new TypeFilter($subpackageName, $parent, $urlFilter),
             self::EXECUTABLE => new ExecutableFilter($subpackageName, $parent, $parentPath, $typeFilter, $pathFilter),
             self::IGNORE => new IgnoreFilter($subpackageName, $parent, $typeFilter, $variablesFilter),
+            self::HASH => new HashFilter($subpackageName, $parent),
         ];
     }
 

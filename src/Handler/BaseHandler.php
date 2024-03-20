@@ -10,7 +10,9 @@ namespace LastCall\DownloadsPlugin\Handler;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
+use Composer\Util\Filesystem;
 use LastCall\DownloadsPlugin\BinariesInstaller;
+use LastCall\DownloadsPlugin\Exception\InvalidDownloadedFileException;
 use LastCall\DownloadsPlugin\Subpackage;
 
 abstract class BaseHandler implements HandlerInterface
@@ -19,11 +21,15 @@ abstract class BaseHandler implements HandlerInterface
 
     private BinariesInstaller $binariesInstaller;
 
+    protected Filesystem $filesystem;
+
     public function __construct(
         protected Subpackage $subpackage,
-        ?BinariesInstaller $binariesInstaller = null
+        ?BinariesInstaller $binariesInstaller = null,
+        ?Filesystem $filesystem = null
     ) {
         $this->binariesInstaller = $binariesInstaller ?? new BinariesInstaller();
+        $this->filesystem = $filesystem ?? new Filesystem();
     }
 
     public function getSubpackage(): Subpackage
@@ -62,9 +68,76 @@ abstract class BaseHandler implements HandlerInterface
 
     public function install(Composer $composer, IOInterface $io): void
     {
-        $this->download($composer, $io);
+        $file = $this->download($composer);
+        if ($this->validateDownloadedFile($file)) {
+            $this->handleDownloadedFile($composer, $file);
+            $this->installBinaries($io);
+        } else {
+            $this->handleInvalidDownloadedFile($file);
+        }
+    }
+
+    abstract protected function handleDownloadedFile(Composer $composer, string $file): void;
+
+    private function installBinaries(IOInterface $io): void
+    {
         $this->binariesInstaller->install($this->subpackage, $io);
     }
 
-    abstract protected function download(Composer $composer, IOInterface $io): void;
+    /**
+     * Download file to temporary place ("vendor/composer/tmp-[random-file-name]"), return downloaded file's path.
+     */
+    private function download(Composer $composer): string
+    {
+        $downloadManager = $composer->getDownloadManager();
+
+        $file = '';
+        $promise = $downloadManager->download($this->subpackage, \dirname($this->subpackage->getTargetPath()));
+        $promise->then(static function ($res) use (&$file) {
+            $file = $res;
+
+            return \React\Promise\resolve($res);
+        });
+        $composer->getLoop()->wait([$promise]);
+
+        return $file;
+    }
+
+    private function validateDownloadedFile(string $filePath): bool
+    {
+        $hash = $this->subpackage->getHash();
+
+        if (!$hash) {
+            return true;
+        }
+
+        return hash_file($hash->algo, $filePath) === $hash->value;
+    }
+
+    protected function remove(string $file): void
+    {
+        $this->filesystem->remove($file);
+    }
+
+    protected function move(string $file): void
+    {
+        $this->filesystem->rename($file, $this->subpackage->getTargetPath());
+    }
+
+    /**
+     * Extract downloaded file to new path.
+     */
+    protected function extract(Composer $composer, string $targetPath): void
+    {
+        $downloadManager = $composer->getDownloadManager();
+
+        $promise = $downloadManager->install($this->subpackage, $targetPath);
+        $composer->getLoop()->wait([$promise]);
+    }
+
+    private function handleInvalidDownloadedFile(string $file): void
+    {
+        $this->remove($file);
+        throw new InvalidDownloadedFileException(sprintf('Extra file "%s" does not match hash value defined in "%s".', $this->subpackage->getDistUrl(), $this->subpackage->getSubpackageName()));
+    }
 }

@@ -13,6 +13,7 @@ namespace LastCall\DownloadsPlugin;
 
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Model\Hash;
 use LastCall\DownloadsPlugin\Model\Version;
 
 /**
@@ -30,6 +31,7 @@ class Subpackage extends Package
         string $url,
         string $path,
         Version $version,
+        private ?Hash $hash = null,
     ) {
         parent::__construct(
             sprintf('%s:%s', $parent->getName(), $subpackageName),
@@ -70,5 +72,15 @@ class Subpackage extends Package
     public function getSubpackageType(): string
     {
         return $this->subpackageType;
+    }
+
+    public function setHash(?Hash $hash): void
+    {
+        $this->hash = $hash;
+    }
+
+    public function getHash(): ?Hash
+    {
+        return $this->hash;
     }
 }

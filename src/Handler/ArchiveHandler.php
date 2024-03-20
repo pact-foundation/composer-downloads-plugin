@@ -3,7 +3,7 @@
 namespace LastCall\DownloadsPlugin\Handler;
 
 use Composer\Composer;
-use Composer\IO\IOInterface;
+use Composer\Util\Filesystem;
 use LastCall\DownloadsPlugin\BinariesInstaller;
 use LastCall\DownloadsPlugin\GlobCleaner;
 use LastCall\DownloadsPlugin\Subpackage;
@@ -15,9 +15,10 @@ abstract class ArchiveHandler extends BaseHandler
     public function __construct(
         Subpackage $subpackage,
         ?BinariesInstaller $binariesInstaller = null,
+        ?Filesystem $filesystem = null,
         ?GlobCleaner $cleaner = null
     ) {
-        parent::__construct($subpackage, $binariesInstaller);
+        parent::__construct($subpackage, $binariesInstaller, $filesystem);
         $this->cleaner = $cleaner ?? new GlobCleaner();
     }
 
@@ -45,16 +46,14 @@ abstract class ArchiveHandler extends BaseHandler
         return ['ignore' => $ignore] + parent::getChecksumData();
     }
 
-    protected function download(Composer $composer, IOInterface $io): void
+    protected function handleDownloadedFile(Composer $composer, string $file): void
     {
-        $targetPath = $this->subpackage->getTargetPath();
-        $downloadManager = $composer->getDownloadManager();
+        $this->extract($composer, $this->subpackage->getTargetPath());
+        $this->clean();
+    }
 
-        // In composer:v2, download and extract were separated.
-        $promise = $downloadManager->download($this->subpackage, $targetPath);
-        $composer->getLoop()->wait([$promise]);
-        $promise = $downloadManager->install($this->subpackage, $targetPath);
-        $composer->getLoop()->wait([$promise]);
-        $this->cleaner->clean($targetPath, $this->subpackage->getIgnore());
+    private function clean(): void
+    {
+        $this->cleaner->clean($this->subpackage->getTargetPath(), $this->subpackage->getIgnore());
     }
 }

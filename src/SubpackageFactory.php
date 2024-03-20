@@ -25,6 +25,7 @@ class SubpackageFactory
         $path = $filterManager->get(FilterManager::PATH)->filter($extraFile);
         $version = $filterManager->get(FilterManager::VERSION)->filter($extraFile);
         $type = $filterManager->get(FilterManager::TYPE)->filter($extraFile);
+        $hash = $filterManager->get(FilterManager::HASH)->filter($extraFile);
 
         return new Subpackage(
             $parent,
@@ -36,6 +37,7 @@ class SubpackageFactory
             $url,
             $path,
             $version,
+            $hash
         );
     }
 
