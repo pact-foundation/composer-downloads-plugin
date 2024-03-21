@@ -4,6 +4,7 @@ namespace LastCall\DownloadsPlugin\Tests\Unit;
 
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
@@ -15,6 +16,7 @@ use Composer\Repository\RepositoryInterface;
 use Composer\Repository\RepositoryManager;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use LastCall\DownloadsPlugin\Exception\OperationNotSupportedException;
 use LastCall\DownloadsPlugin\PackageInstaller;
 use LastCall\DownloadsPlugin\Plugin;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -38,10 +40,10 @@ class PluginTest extends TestCase
     public function testGetSubscribedEvents(): void
     {
         $this->assertSame([
-            PackageEvents::POST_PACKAGE_INSTALL => ['installDownloads', 10],
-            PackageEvents::POST_PACKAGE_UPDATE => ['updateDownloads', 10],
-            ScriptEvents::POST_INSTALL_CMD => ['installDownloadsRoot', 10],
-            ScriptEvents::POST_UPDATE_CMD => ['installDownloadsRoot', 10],
+            PackageEvents::POST_PACKAGE_INSTALL => ['handlePackageEvent', 10],
+            PackageEvents::POST_PACKAGE_UPDATE => ['handlePackageEvent', 10],
+            ScriptEvents::POST_INSTALL_CMD => ['handleScriptEvent', 10],
+            ScriptEvents::POST_UPDATE_CMD => ['handleScriptEvent', 10],
         ], Plugin::getSubscribedEvents());
     }
 
@@ -63,7 +65,7 @@ class PluginTest extends TestCase
         $this->plugin->uninstall($this->composer, $this->io);
     }
 
-    public function testInstallDownloadsRoot(): void
+    public function testHandleScriptEvent(): void
     {
         $rootPackage = $this->createMock(RootPackageInterface::class);
         $this->composer->expects($this->once())->method('getPackage')->willReturn($rootPackage);
@@ -85,10 +87,10 @@ class PluginTest extends TestCase
                 ...array_map(fn (PackageInterface $package) => [$package, $this->composer, $this->io], $packages),
             );
         $event = new Event('name', $this->composer, $this->io);
-        $this->plugin->installDownloadsRoot($event);
+        $this->plugin->handleScriptEvent($event);
     }
 
-    public function testInstallDownloads(): void
+    public function testHandlePackageEventWithInstallOperation(): void
     {
         $package = $this->createMock(PackageInterface::class);
         $this->installer
@@ -104,10 +106,10 @@ class PluginTest extends TestCase
             [],
             new InstallOperation($package)
         );
-        $this->plugin->installDownloads($event);
+        $this->plugin->handlePackageEvent($event);
     }
 
-    public function testUpdateDownloads(): void
+    public function testHandlePackageEventWithUpdateOperation(): void
     {
         $initial = $this->createMock(PackageInterface::class);
         $target = $this->createMock(PackageInterface::class);
@@ -124,6 +126,26 @@ class PluginTest extends TestCase
             [],
             new UpdateOperation($initial, $target)
         );
-        $this->plugin->updateDownloads($event);
+        $this->plugin->handlePackageEvent($event);
+    }
+
+    public function testHandlePackageEventWithUninstallOperation(): void
+    {
+        $package = $this->createMock(PackageInterface::class);
+        $this->installer
+            ->expects($this->never())
+            ->method('install');
+        $event = new PackageEvent(
+            'name',
+            $this->composer,
+            $this->io,
+            false,
+            $this->createMock(RepositoryInterface::class),
+            [],
+            new UninstallOperation($package)
+        );
+        $this->expectException(OperationNotSupportedException::class);
+        $this->expectExceptionMessage('Operation uninstall not supported');
+        $this->plugin->handlePackageEvent($event);
     }
 }

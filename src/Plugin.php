@@ -21,6 +21,7 @@ use Composer\IO\IOInterface;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use LastCall\DownloadsPlugin\Exception\OperationNotSupportedException;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
@@ -35,14 +36,14 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            PackageEvents::POST_PACKAGE_INSTALL => ['installDownloads', self::EVENT_PRIORITY],
-            PackageEvents::POST_PACKAGE_UPDATE => ['updateDownloads', self::EVENT_PRIORITY],
-            ScriptEvents::POST_INSTALL_CMD => ['installDownloadsRoot', self::EVENT_PRIORITY],
-            ScriptEvents::POST_UPDATE_CMD => ['installDownloadsRoot', self::EVENT_PRIORITY],
+            PackageEvents::POST_PACKAGE_INSTALL => ['handlePackageEvent', self::EVENT_PRIORITY],
+            PackageEvents::POST_PACKAGE_UPDATE => ['handlePackageEvent', self::EVENT_PRIORITY],
+            ScriptEvents::POST_INSTALL_CMD => ['handleScriptEvent', self::EVENT_PRIORITY],
+            ScriptEvents::POST_UPDATE_CMD => ['handleScriptEvent', self::EVENT_PRIORITY],
         ];
     }
 
-    public function installDownloadsRoot(Event $event): void
+    public function handleScriptEvent(Event $event): void
     {
         $rootPackage = $event->getComposer()->getPackage();
         $this->installer->install($rootPackage, $event->getComposer(), $event->getIO());
@@ -54,19 +55,13 @@ class Plugin implements PluginInterface, EventSubscriberInterface
         }
     }
 
-    public function installDownloads(PackageEvent $event): void
+    public function handlePackageEvent(PackageEvent $event): void
     {
-        /** @var InstallOperation $operation */
-        $operation = $event->getOperation();
-        $package = $operation->getPackage();
-        $this->installer->install($package, $event->getComposer(), $event->getIO());
-    }
-
-    public function updateDownloads(PackageEvent $event): void
-    {
-        /** @var UpdateOperation $operation */
-        $operation = $event->getOperation();
-        $package = $operation->getTargetPackage();
+        $package = match (\get_class($event->getOperation())) {
+            InstallOperation::class => $event->getOperation()->getPackage(),
+            UpdateOperation::class => $event->getOperation()->getTargetPackage(),
+            default => throw new OperationNotSupportedException(sprintf('Operation %s not supported', $event->getOperation()->getOperationType()))
+        };
         $this->installer->install($package, $event->getComposer(), $event->getIO());
     }
 
