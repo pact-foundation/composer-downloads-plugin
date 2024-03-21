@@ -28,13 +28,13 @@ class VariablesFilter extends BaseFilter
         }
 
         $smpl = new SMPLang([
-            'range' => \Closure::fromCallable('range'),
-            'strtolower' => \Closure::fromCallable('strtolower'),
-            'php_uname' => \Closure::fromCallable('php_uname'),
-            'in_array' => \Closure::fromCallable('in_array'),
-            'str_contains' => \Closure::fromCallable('str_contains'),
-            'str_starts_with' => \Closure::fromCallable('str_starts_with'),
-            'str_ends_with' => \Closure::fromCallable('str_ends_with'),
+            'range' => range(...),
+            'strtolower' => strtolower(...),
+            'php_uname' => php_uname(...),
+            'in_array' => in_array(...),
+            'str_contains' => str_contains(...),
+            'str_starts_with' => str_starts_with(...),
+            'str_ends_with' => str_ends_with(...),
             'matches' => fn (string $pattern, string $subject) => 1 === preg_match($pattern, $subject),
             'PHP_OS' => \PHP_OS,
             'PHP_OS_FAMILY' => \PHP_OS_FAMILY,
