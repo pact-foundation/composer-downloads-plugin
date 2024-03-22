@@ -2,7 +2,6 @@
 
 namespace LastCall\DownloadsPlugin\Tests\Unit;
 
-use Composer\Composer;
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
 use LastCall\DownloadsPlugin\Model\Hash;
@@ -65,12 +64,11 @@ class SubpackageFactoryTest extends TestCase
             $this->parentPath
         );
         $this->assertCount(4, $subpackages);
-        $version = version_compare(Composer::RUNTIME_API_VERSION, '2.0.0') >= 0 ? 'dev-master' : '9999999-dev';
         $this->assertSubpackage(
             $subpackages[0],
             'file1',
             'zip',
-            $version,
+            'dev-master',
             '1.2.3',
             'http://example.com/file1.zip',
             'zip',

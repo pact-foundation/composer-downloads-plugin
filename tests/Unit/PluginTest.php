@@ -5,15 +5,11 @@ namespace LastCall\DownloadsPlugin\Tests\Unit;
 use Composer\Composer;
 use Composer\DependencyResolver\Operation\InstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
-use Composer\DependencyResolver\PolicyInterface;
-use Composer\DependencyResolver\Pool;
-use Composer\DependencyResolver\Request;
 use Composer\Installer\PackageEvent;
 use Composer\Installer\PackageEvents;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Package\RootPackageInterface;
-use Composer\Repository\CompositeRepository;
 use Composer\Repository\InstalledRepositoryInterface;
 use Composer\Repository\RepositoryInterface;
 use Composer\Repository\RepositoryManager;
@@ -99,30 +95,15 @@ class PluginTest extends TestCase
             ->expects($this->once())
             ->method('install')
             ->with($package, $this->composer, $this->io);
-        if (version_compare(Composer::RUNTIME_API_VERSION, '2.0.0') >= 0) {
-            $event = new PackageEvent(
-                'name',
-                $this->composer,
-                $this->io,
-                false,
-                $this->createMock(RepositoryInterface::class),
-                [],
-                new InstallOperation($package)
-            );
-        } else {
-            $event = new PackageEvent(
-                'name',
-                $this->composer,
-                $this->io,
-                false,
-                $this->createMock(PolicyInterface::class),
-                $this->createMock(Pool::class),
-                $this->createMock(CompositeRepository::class),
-                $this->createMock(Request::class),
-                [],
-                new InstallOperation($package)
-            );
-        }
+        $event = new PackageEvent(
+            'name',
+            $this->composer,
+            $this->io,
+            false,
+            $this->createMock(RepositoryInterface::class),
+            [],
+            new InstallOperation($package)
+        );
         $this->plugin->installDownloads($event);
     }
 
@@ -134,30 +115,15 @@ class PluginTest extends TestCase
             ->expects($this->once())
             ->method('install')
             ->with($target, $this->composer, $this->io);
-        if (version_compare(Composer::RUNTIME_API_VERSION, '2.0.0') >= 0) {
-            $event = new PackageEvent(
-                'name',
-                $this->composer,
-                $this->io,
-                false,
-                $this->createMock(RepositoryInterface::class),
-                [],
-                new UpdateOperation($initial, $target)
-            );
-        } else {
-            $event = new PackageEvent(
-                'name',
-                $this->composer,
-                $this->io,
-                false,
-                $this->createMock(PolicyInterface::class),
-                $this->createMock(Pool::class),
-                $this->createMock(CompositeRepository::class),
-                $this->createMock(Request::class),
-                [],
-                new UpdateOperation($initial, $target)
-            );
-        }
+        $event = new PackageEvent(
+            'name',
+            $this->composer,
+            $this->io,
+            false,
+            $this->createMock(RepositoryInterface::class),
+            [],
+            new UpdateOperation($initial, $target)
+        );
         $this->plugin->updateDownloads($event);
     }
 }
