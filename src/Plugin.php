@@ -24,6 +24,7 @@ use Composer\Script\ScriptEvents;
 
 class Plugin implements PluginInterface, EventSubscriberInterface
 {
+    private const EVENT_PRIORITY = 10;
     private PackageInstaller $installer;
 
     public function __construct(?PackageInstaller $installer = null)
@@ -34,10 +35,10 @@ class Plugin implements PluginInterface, EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            PackageEvents::POST_PACKAGE_INSTALL => ['installDownloads', 10],
-            PackageEvents::POST_PACKAGE_UPDATE => ['updateDownloads', 10],
-            ScriptEvents::POST_INSTALL_CMD => ['installDownloadsRoot', 10],
-            ScriptEvents::POST_UPDATE_CMD => ['installDownloadsRoot', 10],
+            PackageEvents::POST_PACKAGE_INSTALL => ['installDownloads', self::EVENT_PRIORITY],
+            PackageEvents::POST_PACKAGE_UPDATE => ['updateDownloads', self::EVENT_PRIORITY],
+            ScriptEvents::POST_INSTALL_CMD => ['installDownloadsRoot', self::EVENT_PRIORITY],
+            ScriptEvents::POST_UPDATE_CMD => ['installDownloadsRoot', self::EVENT_PRIORITY],
         ];
     }
 
