@@ -24,6 +24,6 @@ class InvalidExecutableTest extends InstallInvalidExtraDownloadsTest
 
     protected static function getErrorMessage(): string
     {
-        return 'Skipped download extra files for package test/project: Attribute "executable" of extra file "invalid-executable" defined in package "test/project" are not valid paths.';
+        return 'Skipped download extra files for package test/project: Attribute "executable[*]" of extra file "invalid-executable" defined in package "test/project" must be relative path.';
     }
 }
