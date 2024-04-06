@@ -5,6 +5,8 @@ namespace LastCall\DownloadsPlugin\Composer\Package;
 use Composer\InstalledVersions;
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Composer\Package\Tracking\FileTracking;
+use LastCall\DownloadsPlugin\Composer\Package\Tracking\TrackingInterface;
 use LastCall\DownloadsPlugin\Enum\Type;
 use LastCall\DownloadsPlugin\Model\Hash;
 
@@ -12,13 +14,17 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
 {
     public const FAKE_VERSION = 'dev-master';
 
+    protected TrackingInterface $tracking;
+
     public function __construct(
         private PackageInterface $parent,
         string $id,
         ?string $version,
         private ?Hash $hash,
-        private Type $extraDownloadType,
+        Type $type,
         private array $executable,
+        string $url,
+        string $path,
     ) {
         parent::__construct(
             sprintf('%s:%s', $parent->getName(), $id),
@@ -26,13 +32,16 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
             $version ?? self::FAKE_VERSION,
         );
         $this->setInstallationSource('dist');
-        $this->setDistType($extraDownloadType->toDistType());
-        $this->setType($extraDownloadType->toPackageType()->value);
+        $this->setDistType($type->toDistType());
+        $this->setType($type->toPackageType()->value);
+        $this->setDistUrl($url);
+        $this->setTargetDir($path);
+        $this->tracking = new FileTracking($this->getName(), $url, $path, $type, $executable);
     }
 
     public function getTrackingChecksum(): string
     {
-        return hash('sha256', serialize($this->getTrackingChecksumData()));
+        return $this->tracking->getChecksum();
     }
 
     public function getInstallPath(): string
@@ -52,17 +61,6 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
         }
 
         return $this->hash->verifyFile($path);
-    }
-
-    protected function getTrackingChecksumData(): array
-    {
-        return [
-            'id' => $this->getName(),
-            'url' => $this->getDistUrl(),
-            'path' => $this->getTargetDir(),
-            'type' => $this->extraDownloadType,
-            'executable' => $this->executable,
-        ];
     }
 
     private function getParentPath(): string

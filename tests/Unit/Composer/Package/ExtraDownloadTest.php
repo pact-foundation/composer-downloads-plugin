@@ -22,6 +22,7 @@ class ExtraDownloadTest extends TestCase
         'path/to/file2',
     ];
     private string $version = '1.2.3.0';
+    private string $url = 'http://example.com/file.zip';
     private string $path = 'path/to/dir';
 
     protected function setUp(): void
@@ -43,7 +44,7 @@ class ExtraDownloadTest extends TestCase
 
     public function testGetTrackingChecksum(): void
     {
-        $this->assertSame('81a2647565ec9e478ad0c0fc72fd91500b664d12f484d47bdc8439d21f2fe432', $this->extraDownload->getTrackingChecksum());
+        $this->assertSame('81d3735ad458e2f10551fd022d11aa344774a3b48076b3dbfb633fa96c3572a6', $this->extraDownload->getTrackingChecksum());
     }
 
     public function testGetInstallPathWhenParentPackageIsNotInstalled(): void
@@ -58,7 +59,6 @@ class ExtraDownloadTest extends TestCase
         $parentName = 'leongrdic/smplang';
         $parent = new Package($parentName, 'any version', 'any pretty version');
         $this->createExtraDownload($parent, $this->hash);
-        $this->extraDownload->setTargetDir($this->path);
         $this->assertSame(
             realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.'/'.$this->path,
             $this->extraDownload->getInstallPath()
@@ -77,7 +77,6 @@ class ExtraDownloadTest extends TestCase
         $parentName = 'leongrdic/smplang';
         $parent = new Package($parentName, 'any version', 'any pretty version');
         $this->createExtraDownload($parent, $this->hash);
-        $this->extraDownload->setTargetDir($this->path);
         $this->assertSame([
             realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.'/file1',
             realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.'/path/to/file2',
@@ -114,6 +113,8 @@ class ExtraDownloadTest extends TestCase
             $hash,
             Type::ZIP,
             $this->executable,
+            $this->url,
+            $this->path
         );
     }
 }
