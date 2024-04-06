@@ -111,7 +111,7 @@ abstract class BaseHandler implements HandlerInterface
             return true;
         }
 
-        return hash_file($hash->algo, $filePath) === $hash->value;
+        return $hash->verifyFile($filePath);
     }
 
     protected function remove(string $file): void
