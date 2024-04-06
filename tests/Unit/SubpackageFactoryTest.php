@@ -147,8 +147,7 @@ class SubpackageFactoryTest extends TestCase
         $this->assertSame($subpackageType, $subpackage->getSubpackageType());
         $this->assertSame($this->parentPath.\DIRECTORY_SEPARATOR.$path, $subpackage->getTargetPath());
         if ($hash) {
-            $this->assertSame($hash->algo, $subpackage->getHash()->algo);
-            $this->assertSame($hash->value, $subpackage->getHash()->value);
+            $this->assertEquals($hash, $subpackage->getHash());
         } else {
             $this->assertNull($subpackage->getHash());
         }

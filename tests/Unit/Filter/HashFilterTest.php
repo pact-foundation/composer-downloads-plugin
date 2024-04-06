@@ -101,8 +101,9 @@ class HashFilterTest extends BaseFilterTestCase
                 'value' => $expectedValue = '1d0f9d464f7330e866357380d76f5f68becf0ca84b205a2135fd392581ed0b1d',
             ],
         ]);
-        $this->assertSame($expectedAlgo, $hash->algo);
-        $this->assertSame($expectedValue, $hash->value);
+        $reflection = new \ReflectionClass($hash);
+        $this->assertSame($expectedAlgo, $reflection->getProperty('algo')->getValue($hash));
+        $this->assertSame($expectedValue, $reflection->getProperty('value')->getValue($hash));
     }
 
     protected function createFilter(): FilterInterface
