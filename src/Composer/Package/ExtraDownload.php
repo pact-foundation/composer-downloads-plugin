@@ -2,9 +2,10 @@
 
 namespace LastCall\DownloadsPlugin\Composer\Package;
 
-use Composer\InstalledVersions;
 use Composer\Package\Package;
 use Composer\Package\PackageInterface;
+use LastCall\DownloadsPlugin\Composer\Package\InstallPath\InstallPath;
+use LastCall\DownloadsPlugin\Composer\Package\InstallPath\InstallPathInterface;
 use LastCall\DownloadsPlugin\Composer\Package\Tracking\FileTracking;
 use LastCall\DownloadsPlugin\Composer\Package\Tracking\TrackingInterface;
 use LastCall\DownloadsPlugin\Enum\Type;
@@ -15,9 +16,10 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
     public const FAKE_VERSION = 'dev-master';
 
     protected TrackingInterface $tracking;
+    private InstallPathInterface $installPath;
 
     public function __construct(
-        private PackageInterface $parent,
+        PackageInterface $parent,
         string $id,
         ?string $version,
         private ?Hash $hash,
@@ -37,6 +39,7 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
         $this->setDistUrl($url);
         $this->setTargetDir($path);
         $this->tracking = new FileTracking($this->getName(), $url, $path, $type, $executable);
+        $this->installPath = new InstallPath($parent);
     }
 
     public function getTrackingChecksum(): string
@@ -46,12 +49,12 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
 
     public function getInstallPath(): string
     {
-        return $this->getParentPath().\DIRECTORY_SEPARATOR.$this->getTargetDir();
+        return $this->installPath->convertToAbsolute($this->getTargetDir());
     }
 
     public function getExecutablePaths(): array
     {
-        return array_map(fn (string $bin) => $this->getParentPath().\DIRECTORY_SEPARATOR.$bin, $this->executable);
+        return array_map(fn (string $bin) => $this->installPath->convertToAbsolute($bin), $this->executable);
     }
 
     public function verifyFile(string $path): bool
@@ -61,10 +64,5 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
         }
 
         return $this->hash->verifyFile($path);
-    }
-
-    private function getParentPath(): string
-    {
-        return InstalledVersions::getInstallPath($this->parent->getName());
     }
 }
