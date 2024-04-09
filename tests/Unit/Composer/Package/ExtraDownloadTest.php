@@ -12,18 +12,19 @@ use PHPUnit\Framework\TestCase;
 
 class ExtraDownloadTest extends TestCase
 {
-    private ExtraDownload $extraDownload;
+    protected ExtraDownload $extraDownload;
     private PackageInterface $parent;
     private Hash|MockObject $hash;
     private string $parentName = 'vendor/package-name';
-    private string $name = 'normal-file';
-    private array $executable = [
+    protected string $name = 'normal-file';
+    protected array $executable = [
         'file1',
         'path/to/file2',
     ];
-    private string $version = '1.2.3.0';
-    private string $url = 'http://example.com/file.zip';
-    private string $path = 'path/to/dir';
+    protected string $version = '1.2.3.0';
+    protected string $url = 'http://example.com/file.zip';
+    protected string $path = 'path/to/dir';
+    protected Type $type = Type::PHAR;
 
     protected function setUp(): void
     {
@@ -38,13 +39,13 @@ class ExtraDownloadTest extends TestCase
         $this->assertSame('dev-master', $this->extraDownload->getVersion());
         $this->assertSame($this->version, $this->extraDownload->getPrettyVersion());
         $this->assertSame('dist', $this->extraDownload->getInstallationSource());
-        $this->assertSame('zip', $this->extraDownload->getDistType());
-        $this->assertSame('extra-download:archive', $this->extraDownload->getType());
+        $this->assertSame($this->type->toDistType(), $this->extraDownload->getDistType());
+        $this->assertSame($this->type->toPackageType()->value, $this->extraDownload->getType());
     }
 
     public function testGetTrackingChecksum(): void
     {
-        $this->assertSame('81d3735ad458e2f10551fd022d11aa344774a3b48076b3dbfb633fa96c3572a6', $this->extraDownload->getTrackingChecksum());
+        $this->assertSame('19f9e3ee9a0d59bf200dd3fb08595548e25c16203c794235b7d8f816427ba4b4', $this->extraDownload->getTrackingChecksum());
     }
 
     public function testGetInstallPathWhenParentPackageIsNotInstalled(): void
@@ -104,14 +105,14 @@ class ExtraDownloadTest extends TestCase
         $this->assertSame($isValid, $this->extraDownload->verifyFile($path));
     }
 
-    private function createExtraDownload(PackageInterface $parent, ?Hash $hash): void
+    protected function createExtraDownload(PackageInterface $parent, ?Hash $hash): void
     {
         $this->extraDownload = new ExtraDownload(
             $parent,
             $this->name,
             $this->version,
             $hash,
-            Type::ZIP,
+            $this->type,
             $this->executable,
             $this->url,
             $this->path
