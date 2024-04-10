@@ -33,7 +33,7 @@ class PathValidator extends AbstractValidator
             $this->throwException($this->getAttribute(), 'must be relative path');
         }
 
-        if (preg_match("[\.\.|\0]", $path)) {
+        if (str_contains($path, '..') || str_contains($path, "\0")) {
             $this->throwException($this->getAttribute(), "must be inside relative to parent package's path");
         }
 
