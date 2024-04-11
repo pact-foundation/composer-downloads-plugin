@@ -44,8 +44,8 @@ class PathValidatorTest extends AbstractValidatorTestCase
     public function getAbsolutePathTests(): array
     {
         return [
-            ['C:\Programs\PHP\php.ini'],
-            ['/var/www/project/uploads'],
+            ['D:\path\to\text.txt'],
+            ['/path/to/note.md'],
         ];
     }
 
@@ -67,7 +67,7 @@ class PathValidatorTest extends AbstractValidatorTestCase
             ['..../other/place', []],
             ["path/to/file\0", []],
             ["path/to/file\0/../../../other/place", []],
-            ['path/to/{$file}', ['{$file}' => '../../../etc/passwd']],
+            ['path/to/{$file}', ['{$file}' => '../../../path/to/another/file']],
         ];
     }
 
