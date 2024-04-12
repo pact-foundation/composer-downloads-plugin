@@ -1,10 +1,10 @@
 <?php
 
-namespace LastCall\DownloadsPlugin\Tests\Integration\Overwrite;
+namespace LastCall\DownloadsPlugin\Tests\Integration\NoOverwriting;
 
 use LastCall\DownloadsPlugin\Tests\Integration\CommandTestCase;
 
-abstract class OverwriteTestCase extends CommandTestCase
+abstract class NoOverwritingTestCase extends CommandTestCase
 {
     public function testDownload(): void
     {

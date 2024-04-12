@@ -1,8 +1,8 @@
 <?php
 
-namespace LastCall\DownloadsPlugin\Tests\Integration\Overwrite;
+namespace LastCall\DownloadsPlugin\Tests\Integration\NoOverwriting;
 
-class LibraryTest extends OverwriteTestCase
+class LibraryTest extends NoOverwritingTestCase
 {
     protected function getFilesFromLibrary(): array
     {
@@ -13,11 +13,11 @@ class LibraryTest extends OverwriteTestCase
 
     protected function getInfoMessage(): string
     {
-        return 'Extra file test/library:overwrite has been locally overriden in library-file.txt. To reset it, delete and reinstall.';
+        return 'Extra file test/library:no-overwriting has been locally overriden in library-file.txt. To reset it, delete and reinstall.';
     }
 
     protected static function getLibraryPath(): string
     {
-        return realpath(self::getFixturesPath().'/overwrite-library');
+        return realpath(self::getFixturesPath().'/no-overwriting-library');
     }
 }

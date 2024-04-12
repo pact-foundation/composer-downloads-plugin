@@ -1,8 +1,8 @@
 <?php
 
-namespace LastCall\DownloadsPlugin\Tests\Integration\Overwrite;
+namespace LastCall\DownloadsPlugin\Tests\Integration\NoOverwriting;
 
-class ProjectTest extends OverwriteTestCase
+class ProjectTest extends NoOverwritingTestCase
 {
     protected static function initTestProject(): void
     {
@@ -13,7 +13,7 @@ class ProjectTest extends OverwriteTestCase
     protected static function getComposerJson(): array
     {
         $json = parent::getComposerJson();
-        $json['extra']['downloads']['overwrite'] = [
+        $json['extra']['downloads']['no-overwriting'] = [
             'type' => 'file',
             'url' => 'http://localhost:8000/file/ipsum',
             'path' => 'project-file.txt',
@@ -36,6 +36,6 @@ class ProjectTest extends OverwriteTestCase
 
     protected function getInfoMessage(): string
     {
-        return 'Extra file test/project:overwrite has been locally overriden in project-file.txt. To reset it, delete and reinstall.';
+        return 'Extra file test/project:no-overwriting has been locally overriden in project-file.txt. To reset it, delete and reinstall.';
     }
 }
