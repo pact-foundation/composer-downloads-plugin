@@ -1,0 +1,40 @@
+{
+    "name": "test/library",
+    "require": {
+        "pact-foundation/composer-downloads-plugin": "@dev"
+    },
+    "extra": {
+        "downloads": {
+            "php": {
+                "type": "file",
+                "url": "http://localhost:8000/php/hello",
+                "path": "files/php/hello-php",
+                "executable": true
+            },
+            "ruby": {
+                "type": "file",
+                "url": "http://localhost:8000/ruby/hello.ruby",
+                "path": "files/ruby/hello-ruby",
+                "executable": true
+            },
+            "mix": {
+                "type": "zip",
+                "url": "http://localhost:8000/archive/mix.jar",
+                "path": "files/mix",
+                "executable": [
+                    "files/mix/bin/hello-python"
+                ]
+            },
+            "no-overwriting": {
+                "type": "file",
+                "url": "http://localhost:8000/file/ipsum",
+                "path": "library-file.txt"
+            }
+        }
+    },
+    "bin": [
+        "files/php/hello-php",
+        "files/ruby/hello-ruby",
+        "files/mix/bin/hello-python"
+    ]
+}

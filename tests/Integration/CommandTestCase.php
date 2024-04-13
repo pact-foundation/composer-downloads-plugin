@@ -23,7 +23,7 @@ abstract class CommandTestCase extends TestCase
                 ],
                 'library' => [
                     'type' => 'path',
-                    'url' => self::getLibraryPath(),
+                    'url' => static::getLibraryPath(),
                     'options' => [
                         'symlink' => false,
                     ],
@@ -110,14 +110,14 @@ abstract class CommandTestCase extends TestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::startLocalServer();
-        self::initTestProject();
+        static::startLocalServer();
+        static::initTestProject();
     }
 
     public static function tearDownAfterClass(): void
     {
-        self::cleanTestProjectDir();
-        self::stopLocalServer();
+        static::cleanTestProjectDir();
+        static::stopLocalServer();
     }
 
     protected function setUp(): void
@@ -203,26 +203,26 @@ abstract class CommandTestCase extends TestCase
 
     protected function runComposerCommandAndAssert(array $command): void
     {
-        $this->assertFiles($this->shouldExistBeforeCommand());
+        $this->assertFiles([$this, 'shouldExistBeforeCommand']);
         $this->runComposer($command);
-        $this->assertFiles($this->shouldExistAfterCommand());
+        $this->assertFiles([$this, 'shouldExistAfterCommand']);
         $this->assertExecutable();
     }
 
-    protected function shouldExistBeforeCommand(): bool
+    protected function shouldExistBeforeCommand(string $file): bool
     {
         return false;
     }
 
-    protected function shouldExistAfterCommand(): bool
+    protected function shouldExistAfterCommand(string $file): bool
     {
         return true;
     }
 
-    protected function assertFiles(bool $exist = true): void
+    protected function assertFiles(callable $method): void
     {
         foreach ($this->getFiles() as $file => $sha256) {
-            if ($exist && $sha256) {
+            if (\call_user_func($method, $file) && $sha256) {
                 $this->assertFileExists(self::getPathToTestDir($file));
                 if (\is_string($sha256)) {
                     $this->assertEquals($sha256, hash('sha256', file_get_contents(self::getPathToTestDir($file))));
@@ -354,9 +354,14 @@ abstract class CommandTestCase extends TestCase
         }
 
         $this->assertComposerErrorOutput($process->getErrorOutput());
+        $this->assertComposerOutput($process->getOutput());
     }
 
     protected function assertComposerErrorOutput(string $output): void
+    {
+    }
+
+    protected function assertComposerOutput(string $output): void
     {
     }
 
@@ -384,7 +389,7 @@ abstract class CommandTestCase extends TestCase
         return realpath(__DIR__.'/../..');
     }
 
-    private static function getFixturesPath(): string
+    protected static function getFixturesPath(): string
     {
         return realpath(__DIR__.'/../Fixtures');
     }
@@ -394,7 +399,7 @@ abstract class CommandTestCase extends TestCase
         return realpath(self::getFixturesPath().'/files');
     }
 
-    private static function getLibraryPath(): string
+    protected static function getLibraryPath(): string
     {
         return realpath(self::getFixturesPath().'/library');
     }

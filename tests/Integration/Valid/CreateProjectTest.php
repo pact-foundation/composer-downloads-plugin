@@ -28,16 +28,14 @@ class CreateProjectTest extends CommandTestCase
 
     public static function setUpBeforeClass(): void
     {
-        self::startLocalServer();
-        self::initTestProject();
-        self::initTempProject();
+        parent::setUpBeforeClass();
+        static::initTempProject();
     }
 
     public static function tearDownAfterClass(): void
     {
-        self::cleanTestProjectDir();
-        self::cleanTempProjectDir();
-        self::stopLocalServer();
+        static::cleanTempProjectDir();
+        parent::tearDownAfterClass();
     }
 
     protected function setUp(): void
