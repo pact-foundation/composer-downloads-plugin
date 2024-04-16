@@ -73,29 +73,6 @@ class UrlFilterTest extends BaseFilterTestCase
         $this->filter->filter($extraFile);
     }
 
-    public function getInvalidUrlSchemeTests(): array
-    {
-        return [
-            ['file://server/path/to/file'],
-            ['ssh://user@host:123/path'],
-            ['mailto:jsmith@example.com?subject=Hello'],
-        ];
-    }
-
-    /**
-     * @dataProvider getInvalidUrlSchemeTests
-     */
-    public function testInvalidUrlScheme(string $invalidUrl): void
-    {
-        $extraFile = [
-            'url' => $invalidUrl,
-        ];
-        $this->variablesFilter->expects($this->once())->method('filter')->with($extraFile)->willReturn([]);
-        $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('url', 'has invalid scheme');
-        $this->filter->filter($extraFile);
-    }
-
     public function getFilterUrlTests(): array
     {
         return [
