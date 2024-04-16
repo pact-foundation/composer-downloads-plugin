@@ -82,7 +82,7 @@ class TypeTest extends TestCase
             [Type::XZ, 'extra-download:archive'],
             [Type::FILE, 'extra-download:file'],
             [Type::PHAR, 'extra-download:file'],
-            [Type::GZIP, 'extra-download:gzip'],
+            [Type::GZIP, 'extra-download:file'],
         ];
     }
 

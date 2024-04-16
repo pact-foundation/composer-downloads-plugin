@@ -45,9 +45,6 @@ enum Type: string
         if ($this->isArchive()) {
             return PackageType::ARCHIVE;
         }
-        if (self::GZIP === $this) {
-            return PackageType::GZIP;
-        }
 
         return PackageType::FILE;
     }
