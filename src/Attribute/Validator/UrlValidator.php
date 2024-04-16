@@ -31,10 +31,6 @@ class UrlValidator extends AbstractValidator
             $this->throwException($this->getAttribute(), 'is invalid url');
         }
 
-        if (!\in_array(parse_url($url, \PHP_URL_SCHEME), ['http', 'https'])) {
-            $this->throwException($this->getAttribute(), 'has invalid scheme');
-        }
-
         return $url;
     }
 

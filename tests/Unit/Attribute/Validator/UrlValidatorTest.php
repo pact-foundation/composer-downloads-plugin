@@ -59,26 +59,6 @@ class UrlValidatorTest extends AbstractValidatorTestCase
         $this->validator->validate($invalidUrl);
     }
 
-    public function getInvalidUrlSchemeTests(): array
-    {
-        return [
-            ['file://server/path/to/file'],
-            ['ssh://user@host:123/path'],
-            ['mailto:jsmith@example.com?subject=Hello'],
-        ];
-    }
-
-    /**
-     * @dataProvider getInvalidUrlSchemeTests
-     */
-    public function testInvalidUrlScheme(string $invalidUrl): void
-    {
-        $this->attributeManager->expects($this->once())->method('get')->with(Attribute::VARIABLES)->willReturn([]);
-        $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('url', 'has invalid scheme');
-        $this->validator->validate($invalidUrl);
-    }
-
     public function getValidateUrlTests(): array
     {
         return [
