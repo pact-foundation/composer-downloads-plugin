@@ -40,7 +40,7 @@ class InstallPathTest extends TestCase
             ->method('getName')
             ->willReturn($name);
         $this->assertSame(
-            realpath(__DIR__.'/../../../../../vendor/composer/').'/../'.$name.'/'.$this->relative,
+            realpath(__DIR__.'/../../../../../vendor/composer/').'/../'.$name.\DIRECTORY_SEPARATOR.$this->relative,
             $this->installPath->convertToAbsolute($this->relative)
         );
     }

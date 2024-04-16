@@ -61,7 +61,7 @@ class ExtraDownloadTest extends TestCase
         $parent = new Package($parentName, 'any version', 'any pretty version');
         $this->createExtraDownload($parent, $this->hash);
         $this->assertSame(
-            realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.'/'.$this->path,
+            realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.\DIRECTORY_SEPARATOR.$this->path,
             $this->extraDownload->getInstallPath()
         );
     }
@@ -79,8 +79,8 @@ class ExtraDownloadTest extends TestCase
         $parent = new Package($parentName, 'any version', 'any pretty version');
         $this->createExtraDownload($parent, $this->hash);
         $this->assertSame([
-            realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.'/file1',
-            realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.'/path/to/file2',
+            realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.\DIRECTORY_SEPARATOR.'file1',
+            realpath(__DIR__.'/../../../../vendor/composer/').'/../'.$parentName.\DIRECTORY_SEPARATOR.'path/to/file2',
         ], $this->extraDownload->getExecutablePaths());
     }
 
