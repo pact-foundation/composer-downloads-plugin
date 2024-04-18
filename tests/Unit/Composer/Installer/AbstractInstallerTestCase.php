@@ -18,7 +18,7 @@ use VirtualFileSystem\FileSystem as VirtualFileSystem;
 
 abstract class AbstractInstallerTestCase extends TestCase
 {
-    private ?VirtualFileSystem $fs = null;
+    protected ?VirtualFileSystem $fs = null;
     protected Composer|MockObject $composer;
     protected IOInterface|MockObject $io;
     protected DownloadManager|MockObject $downloadManager;
