@@ -21,6 +21,15 @@ class ArchiveInstallerTest extends AbstractInstallerTestCase
         return new ArchiveInstaller($this->io, $this->composer, $this->executableInstaller);
     }
 
+    /**
+     * @testWith ["extra-download:file", false]
+     *           ["extra-download:archive", true]
+     */
+    public function testSupports(string $type, bool $supports): void
+    {
+        $this->assertSame($supports, $this->installer->supports($type));
+    }
+
     public function testInstallExtraDownload(): void
     {
         $package = $this->createMock(ExtraDownloadInterface::class);
@@ -30,16 +39,9 @@ class ArchiveInstallerTest extends AbstractInstallerTestCase
         });
     }
 
-    public function getInstallExtraArchiveTests(): array
-    {
-        return [
-            [true],
-            [false],
-        ];
-    }
-
     /**
-     * @dataProvider getInstallExtraArchiveTests
+     * @testWith [true]
+     *           [false]
      */
     public function testInstallExtraArchive(bool $hasPackage): void
     {
@@ -47,7 +49,7 @@ class ArchiveInstallerTest extends AbstractInstallerTestCase
             ->expects($this->once())
             ->method('getDownloadManager')
             ->willReturn($this->downloadManager);
-        $downloaderPromise = new Promise(fn (callable $resolve) => $resolve(null));
+        $downloaderPromise = new Promise(fn (callable $resolver) => $resolver(null));
         $this->downloadManager
             ->expects($this->once())
             ->method('install')
