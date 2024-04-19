@@ -2,6 +2,6 @@
 
 namespace LastCall\DownloadsPlugin\Exception;
 
-class UnexpectedValueException extends \UnexpectedValueException
+class UnexpectedValueException extends BaseException
 {
 }
