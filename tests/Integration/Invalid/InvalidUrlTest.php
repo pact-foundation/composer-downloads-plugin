@@ -12,7 +12,7 @@ class InvalidUrlTest extends InstallInvalidExtraDownloadsTest
     protected static function getExtraFile(): array
     {
         return [
-            'url' => '/etc/passwd',
+            'url' => '/path/to/system/file',
         ];
     }
 
