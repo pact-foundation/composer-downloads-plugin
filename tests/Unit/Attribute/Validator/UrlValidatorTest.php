@@ -43,8 +43,8 @@ class UrlValidatorTest extends AbstractValidatorTestCase
     {
         return [
             [''],
-            ['C:\Programs\PHP\php.ini'],
-            ['/var/www/project/uploads'],
+            ['Z:\path\to\file.txt'],
+            ['/path/to/any/directory'],
         ];
     }
 
