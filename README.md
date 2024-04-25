@@ -170,4 +170,4 @@ This package is available under the [MIT license](LICENSE).
 [coveralls_link]: https://coveralls.io/github/pact-foundation/composer-downloads-plugin?branch=main
 
 [php-version-url]: https://packagist.org/packages/pact-foundation/composer-downloads-plugin
-[php-version-image]: http://img.shields.io/badge/php-8.0.0+-ff69b4.svg
+[php-version-image]: http://img.shields.io/badge/php-8.1.0+-ff69b4.svg
