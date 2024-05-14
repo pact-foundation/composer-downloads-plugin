@@ -5,6 +5,7 @@ namespace LastCall\DownloadsPlugin\Attribute\Validator;
 use Composer\Package\PackageInterface;
 use LastCall\DownloadsPlugin\Attribute\AttributeManagerInterface;
 use LastCall\DownloadsPlugin\Enum\Attribute;
+use LastCall\DownloadsPlugin\Helper\MuslDetector;
 use Le\SMPLang\Exception;
 use Le\SMPLang\SMPLang;
 
@@ -27,6 +28,7 @@ class VariablesValidator extends AbstractValidator
             'str_contains' => str_contains(...),
             'str_starts_with' => str_starts_with(...),
             'str_ends_with' => str_ends_with(...),
+            'musl' => new MuslDetector(),
             'matches' => fn (string $pattern, string $subject) => 1 === preg_match($pattern, $subject),
             'PHP_OS' => \PHP_OS,
             'PHP_OS_FAMILY' => \PHP_OS_FAMILY,
