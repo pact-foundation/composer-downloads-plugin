@@ -19,10 +19,11 @@ Suppose your PHP package `foo/bar` relies on an external archive file (`examplel
   "extra": {
     "downloads": {
       "examplelib": {
-        "url": "https://example.com/examplelib-{$version}-{$os}-{$architecture}.{$extension}",
+        "url": "https://example.com/examplelib-{$version}-{$os}-{$architecture}${$musl}.{$extension}",
         "path": "extern/{$id}",
         "version": "1.1.0",
         "variables": {
+            "{$musl}": "PHP_OS === 'Linux' && musl() === true ? '-musl' : ''",
             "{$os}": "strtolower(PHP_OS_FAMILY)",
             "{$architecture}": "strtolower(php_uname('m'))",
             "{$extension}": "PHP_OS_FAMILY === 'Windows' ? 'zip' : 'tar.gz'",
@@ -108,6 +109,7 @@ Custom variable support these methods:
 * `str_starts_with`
 * `str_ends_with`
 * `matches`
+* `musl`
 
 #### Constants
 
