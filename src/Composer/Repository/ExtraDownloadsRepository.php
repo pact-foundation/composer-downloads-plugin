@@ -5,11 +5,10 @@ namespace LastCall\DownloadsPlugin\Composer\Repository;
 use Composer\Installer\InstallationManager;
 use Composer\Json\JsonFile;
 use Composer\Package\PackageInterface;
-use Composer\Repository\InstalledRepositoryInterface;
 use Composer\Repository\InvalidRepositoryException;
 use LastCall\DownloadsPlugin\Composer\Package\ExtraDownloadInterface;
 
-class ExtraDownloadsRepository implements InstalledRepositoryInterface
+class ExtraDownloadsRepository implements ExtraDownloadsRepositoryInterface
 {
     private array $extraDownloads;
 
@@ -43,6 +42,11 @@ class ExtraDownloadsRepository implements InstalledRepositoryInterface
         }
 
         return $this->extraDownloads[$name] === $package->getTrackingChecksum();
+    }
+
+    public function isTracked(ExtraDownloadInterface $package): bool
+    {
+        return isset($this->extraDownloads[$package->getName()]);
     }
 
     protected function initialize(): void

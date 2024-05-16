@@ -7,8 +7,9 @@ use Composer\Downloader\DownloadManager;
 use Composer\Installer\InstallerInterface;
 use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
-use Composer\Repository\InstalledRepositoryInterface;
+use Composer\Repository\InstalledArrayRepository;
 use LastCall\DownloadsPlugin\Composer\Package\ExtraDownloadInterface;
+use LastCall\DownloadsPlugin\Composer\Repository\ExtraDownloadsRepositoryInterface;
 use LastCall\DownloadsPlugin\Exception\ExtraDownloadHashMismatchException;
 use LastCall\DownloadsPlugin\Installer\ExecutableInstallerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -23,7 +24,7 @@ abstract class AbstractInstallerTestCase extends TestCase
     protected IOInterface|MockObject $io;
     protected DownloadManager|MockObject $downloadManager;
     protected ExecutableInstallerInterface|MockObject $executableInstaller;
-    protected InstalledRepositoryInterface|MockObject $repository;
+    protected ExtraDownloadsRepositoryInterface|MockObject $repository;
     protected ExtraDownloadInterface|MockObject $extraDownload;
     protected PackageInterface|MockObject $package;
     protected InstallerInterface $installer;
@@ -39,7 +40,7 @@ abstract class AbstractInstallerTestCase extends TestCase
         $this->io = $this->createMock(IOInterface::class);
         $this->downloadManager = $this->createMock(DownloadManager::class);
         $this->executableInstaller = $this->createMock(ExecutableInstallerInterface::class);
-        $this->repository = $this->createMock(InstalledRepositoryInterface::class);
+        $this->repository = $this->createMock(ExtraDownloadsRepositoryInterface::class);
         $this->extraDownload = $this->createMock(ExtraDownloadInterface::class);
         $this->package = $this->createMock(PackageInterface::class);
         $this->installer = $this->createInstaller();
@@ -50,31 +51,103 @@ abstract class AbstractInstallerTestCase extends TestCase
         $this->fs = null;
     }
 
-    public function testIsInstalledPackage(): void
+    public function testIsInstalledNotSupportedPackage(): void
     {
         $this->assertFalse($this->installer->isInstalled($this->repository, $this->package));
     }
 
-    public function getIsInstalledExtraDownloadTests(): array
+    public function testIsInstalledNotSupportedRepository(): void
     {
-        return [
-            [true, true, true],
-            [false, true, true],
-            [true, false, false],
-            [false, false, false],
-        ];
+        $this->assertFalse($this->installer->isInstalled(new InstalledArrayRepository(), $this->package));
     }
 
-    /**
-     * @dataProvider getIsInstalledExtraDownloadTests
-     */
-    public function testIsInstalledExtraDownload(bool $hasPackage, bool $fileExists, bool $isInstalled): void
+    public function testIsInstalledSkip(): void
     {
         $this->repository
             ->expects($this->once())
             ->method('hasPackage')
             ->with($this->extraDownload)
+            ->willReturn(true);
+        $this->repository
+            ->expects($this->once())
+            ->method('isTracked')
+            ->with($this->extraDownload)
+            ->willReturn(true);
+        $this->extraDownload
+            ->expects($this->once())
+            ->method('getInstallPath')
+            ->willReturn($this->fs->path($this->installPath));
+        $this->fs->createDirectory(\dirname($this->installPath), true);
+        $this->fs->createFile($this->installPath, 'downloaded file');
+        $this->extraDownload
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn($this->name);
+        $this->io
+            ->expects($this->once())
+            ->method('write')
+            ->with(
+                sprintf('<info>Skip extra file <comment>%s</comment></info>', $this->name),
+                true,
+                IOInterface::VERY_VERBOSE
+            );
+        $this->assertTrue($this->installer->isInstalled($this->repository, $this->extraDownload));
+    }
+
+    public function testIsInstalledLocalyOverriden(): void
+    {
+        $this->repository
+            ->expects($this->once())
+            ->method('isTracked')
+            ->with($this->extraDownload)
+            ->willReturn(false);
+        $this->extraDownload
+            ->expects($this->once())
+            ->method('getInstallPath')
+            ->willReturn($this->fs->path($this->installPath));
+        $this->fs->createDirectory(\dirname($this->installPath), true);
+        $this->fs->createFile($this->installPath, 'downloaded file');
+        $this->extraDownload
+            ->expects($this->once())
+            ->method('getName')
+            ->willReturn($this->name);
+        $this->extraDownload
+            ->expects($this->once())
+            ->method('getTargetDir')
+            ->willReturn($this->targetDir);
+        $this->io
+            ->expects($this->once())
+            ->method('write')
+            ->with(
+                sprintf(
+                    '<info>Extra file <comment>%s</comment> has been locally overriden in <comment>%s</comment>. To reset it, delete and reinstall.</info>',
+                    $this->name,
+                    $this->targetDir,
+                ),
+                true
+            );
+        $this->assertTrue($this->installer->isInstalled($this->repository, $this->extraDownload));
+    }
+
+    /**
+     * @testWith [false, true, true]
+     *           [true, true, false]
+     *           [true, false, false]
+     *           [false, true, false]
+     *           [false, false, false]
+     */
+    public function testIsNotInstalled(bool $hasPackage, bool $isTracked, bool $fileExists): void
+    {
+        $this->repository
+            ->expects($this->any())
+            ->method('hasPackage')
+            ->with($this->extraDownload)
             ->willReturn($hasPackage);
+        $this->repository
+            ->expects($this->any())
+            ->method('isTracked')
+            ->with($this->extraDownload)
+            ->willReturn($isTracked);
         $this->extraDownload
             ->expects($this->once())
             ->method('getInstallPath')
@@ -83,40 +156,7 @@ abstract class AbstractInstallerTestCase extends TestCase
             $this->fs->createDirectory(\dirname($this->installPath), true);
             $this->fs->createFile($this->installPath, 'downloaded file');
         }
-        if ($fileExists) {
-            $this->extraDownload
-                ->expects($this->once())
-                ->method('getName')
-                ->willReturn($this->name);
-        }
-        if (!$hasPackage && $fileExists) {
-            $this->extraDownload
-                ->expects($this->once())
-                ->method('getTargetDir')
-                ->willReturn($this->targetDir);
-            $this->io
-                ->expects($this->once())
-                ->method('write')
-                ->with(
-                    sprintf(
-                        '<info>Extra file <comment>%s</comment> has been locally overriden in <comment>%s</comment>. To reset it, delete and reinstall.</info>',
-                        $this->name,
-                        $this->targetDir,
-                    ),
-                    true
-                );
-        }
-        if ($hasPackage && $fileExists) {
-            $this->io
-                ->expects($this->once())
-                ->method('write')
-                ->with(
-                    sprintf('<info>Skip extra file <comment>%s</comment></info>', $this->name),
-                    true,
-                    IOInterface::VERY_VERBOSE
-                );
-        }
-        $this->assertSame($isInstalled, $this->installer->isInstalled($this->repository, $this->extraDownload));
+        $this->assertFalse($this->installer->isInstalled($this->repository, $this->extraDownload));
     }
 
     public function testDownloadPackage(): void
