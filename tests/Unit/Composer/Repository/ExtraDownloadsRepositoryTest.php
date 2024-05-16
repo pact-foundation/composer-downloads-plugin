@@ -87,16 +87,9 @@ class ExtraDownloadsRepositoryTest extends TestCase
         $this->assertFalse($this->repository->hasPackage($this->package));
     }
 
-    public function getHasExtraDownloadTests(): array
-    {
-        return [
-            [false],
-            [true],
-        ];
-    }
-
     /**
-     * @dataProvider getHasExtraDownloadTests
+     * @testWith [true]
+     *           [false]
      */
     public function testHasExtraDownload(bool $sameTrackingChecksum): void
     {
@@ -112,6 +105,21 @@ class ExtraDownloadsRepositoryTest extends TestCase
         $this->assertFalse($this->repository->hasPackage($this->extraDownload));
         $this->repository->addPackage($this->extraDownload);
         $this->assertSame($sameTrackingChecksum, $this->repository->hasPackage($this->extraDownload));
+    }
+
+    public function testIsTracked(): void
+    {
+        $this->extraDownload
+            ->expects($this->exactly(3))
+            ->method('getName')
+            ->willReturn($this->name);
+        $this->extraDownload
+            ->expects($this->once())
+            ->method('getTrackingChecksum')
+            ->willReturn($this->trackingChecksum);
+        $this->assertFalse($this->repository->isTracked($this->extraDownload));
+        $this->repository->addPackage($this->extraDownload);
+        $this->assertTrue($this->repository->isTracked($this->extraDownload));
     }
 
     public function testReloadFromInvalidFile(): void

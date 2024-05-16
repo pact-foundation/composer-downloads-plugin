@@ -8,6 +8,7 @@ use Composer\IO\IOInterface;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
 use LastCall\DownloadsPlugin\Composer\Package\ExtraDownloadInterface;
+use LastCall\DownloadsPlugin\Composer\Repository\ExtraDownloadsRepositoryInterface;
 use LastCall\DownloadsPlugin\Exception\ExtraDownloadHashMismatchException;
 use LastCall\DownloadsPlugin\Installer\ExecutableInstaller;
 use LastCall\DownloadsPlugin\Installer\ExecutableInstallerInterface;
@@ -27,14 +28,13 @@ abstract class AbstractInstaller implements InstallerInterface
 
     public function isInstalled(InstalledRepositoryInterface $repo, PackageInterface $package): bool
     {
-        if (!$package instanceof ExtraDownloadInterface) {
+        if (!$package instanceof ExtraDownloadInterface || !$repo instanceof ExtraDownloadsRepositoryInterface) {
             return false;
         }
 
-        $hasPackage = $repo->hasPackage($package);
         $fileExists = file_exists($package->getInstallPath());
 
-        if (!$hasPackage && $fileExists) {
+        if ($fileExists && !$repo->isTracked($package)) {
             $this->io->write(
                 sprintf(
                     '<info>Extra file <comment>%s</comment> has been locally overriden in <comment>%s</comment>. To reset it, delete and reinstall.</info>',
@@ -47,7 +47,7 @@ abstract class AbstractInstaller implements InstallerInterface
             return true;
         }
 
-        if ($hasPackage && $fileExists) {
+        if ($fileExists && $repo->hasPackage($package)) {
             $this->io->write(
                 sprintf('<info>Skip extra file <comment>%s</comment></info>', $package->getName()),
                 true,
