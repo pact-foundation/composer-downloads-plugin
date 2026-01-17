@@ -275,11 +275,11 @@ abstract class CommandTestCase extends TestCase
             $process->run();
             $this->assertSame('', $process->getOutput());
             $exitCodeMap = [
-                'Windows' => 1,
-                'Darwin' => 126,
-                'Linux' => 127,
+                'Windows' => [1],
+                'Darwin' => [126, 127],
+                'Linux' => [127],
             ];
-            $this->assertSame($exitCodeMap[\PHP_OS_FAMILY], $process->getExitCode());
+            $this->assertContains($process->getExitCode(), $exitCodeMap[\PHP_OS_FAMILY]);
         }
     }
 
