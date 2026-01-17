@@ -28,7 +28,7 @@ abstract class AbstractValidatorTestCase extends TestCase
     protected function expectUnexpectedValueException(string $attribute, string $reason): void
     {
         $this->expectException(UnexpectedValueException::class);
-        $this->expectExceptionMessage(sprintf('Attribute "%s" of extra file "%s" defined in package "%s" %s.', $attribute, $this->id, $this->parentName, $reason));
+        $this->expectExceptionMessage(\sprintf('Attribute "%s" of extra file "%s" defined in package "%s" %s.', $attribute, $this->id, $this->parentName, $reason));
     }
 
     abstract protected function createValidator(): ValidatorInterface;

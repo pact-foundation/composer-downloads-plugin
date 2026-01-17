@@ -53,7 +53,7 @@ class ExtraDownloadsPlugin implements PluginInterface, EventSubscriberInterface
         $package = match (\get_class($event->getOperation())) {
             InstallOperation::class => $event->getOperation()->getPackage(),
             UpdateOperation::class => $event->getOperation()->getTargetPackage(),
-            default => throw new OutOfRangeException(sprintf('Operation %s not supported', $event->getOperation()->getOperationType()))
+            default => throw new OutOfRangeException(\sprintf('Operation %s not supported', $event->getOperation()->getOperationType())),
         };
         $this->getHandler($event->getComposer(), $event->getIO())->handle($package);
     }

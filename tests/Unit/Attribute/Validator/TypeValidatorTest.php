@@ -53,7 +53,7 @@ class TypeValidatorTest extends AbstractValidatorTestCase
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
         $this->attributeManager->expects($this->never())->method('get');
-        $this->expectUnexpectedValueException('type', sprintf('must be string, "%s" given', $type));
+        $this->expectUnexpectedValueException('type', \sprintf('must be string, "%s" given', $type));
         $this->validator->validate($invalidType);
     }
 

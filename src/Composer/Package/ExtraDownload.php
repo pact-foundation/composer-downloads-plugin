@@ -29,7 +29,7 @@ class ExtraDownload extends Package implements ExtraDownloadInterface
         string $path,
     ) {
         parent::__construct(
-            sprintf('%s:%s', $parent->getName(), $id),
+            \sprintf('%s:%s', $parent->getName(), $id),
             self::FAKE_VERSION,
             $version ?? self::FAKE_VERSION,
         );

@@ -312,7 +312,7 @@ abstract class CommandTestCase extends TestCase
             self::$origDir = null;
 
             if (getenv('USE_TEST_PROJECT')) {
-                fwrite(\STDERR, sprintf("\n\nTest project location (%s): %s\n", self::class, self::$testDir));
+                fwrite(\STDERR, \sprintf("\n\nTest project location (%s): %s\n", self::class, self::$testDir));
             } else {
                 self::cleanDir(self::$testDir);
             }

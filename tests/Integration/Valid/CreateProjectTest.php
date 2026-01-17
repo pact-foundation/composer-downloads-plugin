@@ -48,7 +48,7 @@ class CreateProjectTest extends CommandTestCase
         if (\is_string($testDir)) {
             self::$testDir = $testDir;
             if (is_dir($testDir)) {
-                throw new \UnexpectedValueException(sprintf('Test project directory "%s" must not exist.', $testDir));
+                throw new \UnexpectedValueException(\sprintf('Test project directory "%s" must not exist.', $testDir));
             }
         } else {
             self::$testDir = sys_get_temp_dir().\DIRECTORY_SEPARATOR.uniqid('test-project-', true);

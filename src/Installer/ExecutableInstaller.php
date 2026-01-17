@@ -20,7 +20,7 @@ class ExecutableInstaller implements ExecutableInstallerInterface
             if (Platform::isWindows() || Platform::isWindowsSubsystemForLinux()) {
                 $proxy = $path.'.bat';
                 if (file_exists($proxy)) {
-                    $this->io->writeError(sprintf('    Skipped installation of bin %s.bat proxy for package %s: a .bat proxy was already installed', $path, $extraDownload->getName()));
+                    $this->io->writeError(\sprintf('    Skipped installation of bin %s.bat proxy for package %s: a .bat proxy was already installed', $path, $extraDownload->getName()));
                 } else {
                     $caller = BinaryInstaller::determineBinaryCaller($path);
                     file_put_contents($proxy, '@'.$caller.' "%~dp0'.ProcessExecutor::escape(basename($proxy, '.bat')).'" %*');

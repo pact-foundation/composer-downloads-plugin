@@ -31,7 +31,7 @@ class AttributeManager implements AttributeManagerInterface
         }
 
         if (!isset($this->validators[$attribute->value])) {
-            throw new OutOfRangeException(sprintf('Validator "%s" not found.', $attribute->value));
+            throw new OutOfRangeException(\sprintf('Validator "%s" not found.', $attribute->value));
         }
 
         return $this->values[$attribute->value] = $this->validators[$attribute->value]->validate($this->attributes[$attribute->value] ?? null);

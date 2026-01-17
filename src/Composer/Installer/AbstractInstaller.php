@@ -36,7 +36,7 @@ abstract class AbstractInstaller implements InstallerInterface
 
         if ($fileExists && !$repo->isTracked($package)) {
             $this->io->write(
-                sprintf(
+                \sprintf(
                     '<info>Extra file <comment>%s</comment> has been locally overriden in <comment>%s</comment>. To reset it, delete and reinstall.</info>',
                     $package->getName(),
                     $package->getTargetDir()
@@ -49,7 +49,7 @@ abstract class AbstractInstaller implements InstallerInterface
 
         if ($fileExists && $repo->hasPackage($package)) {
             $this->io->write(
-                sprintf('<info>Skip extra file <comment>%s</comment></info>', $package->getName()),
+                \sprintf('<info>Skip extra file <comment>%s</comment></info>', $package->getName()),
                 true,
                 IOInterface::VERY_VERBOSE
             );
@@ -73,7 +73,7 @@ abstract class AbstractInstaller implements InstallerInterface
             if ($package->verifyFile($result)) {
                 return \React\Promise\resolve($result);
             }
-            $this->io->error(sprintf('    Extra file "%s" does not match hash value defined in "%s".', $package->getDistUrl(), $package->getName()));
+            $this->io->error(\sprintf('    Extra file "%s" does not match hash value defined in "%s".', $package->getDistUrl(), $package->getName()));
             $this->composer->getDownloadManager()->cleanup('install', $package, $targetDir);
 
             return \React\Promise\reject(new ExtraDownloadHashMismatchException());

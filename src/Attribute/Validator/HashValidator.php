@@ -14,12 +14,12 @@ class HashValidator extends AbstractValidator
         }
 
         if (!\is_array($values)) {
-            $this->throwException($this->getAttribute(), sprintf('must be array, "%s" given', get_debug_type($values)));
+            $this->throwException($this->getAttribute(), \sprintf('must be array, "%s" given', get_debug_type($values)));
         }
 
         $algo = $values['algo'] ?? null;
         if (!\is_string($algo)) {
-            $this->throwException('hash > algo', sprintf('must be string, "%s" given', get_debug_type($algo)));
+            $this->throwException('hash > algo', \sprintf('must be string, "%s" given', get_debug_type($algo)));
         }
 
         if (!\in_array($algo, hash_algos(), true)) {
@@ -28,7 +28,7 @@ class HashValidator extends AbstractValidator
 
         $value = $values['value'] ?? null;
         if (!\is_string($value)) {
-            $this->throwException('hash > value', sprintf('must be string, "%s" given', get_debug_type($value)));
+            $this->throwException('hash > value', \sprintf('must be string, "%s" given', get_debug_type($value)));
         }
 
         return new Hash($algo, $value);
