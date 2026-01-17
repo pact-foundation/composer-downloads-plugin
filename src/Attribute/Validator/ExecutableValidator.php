@@ -13,7 +13,7 @@ class ExecutableValidator extends AbstractValidator
         string $id,
         PackageInterface $parent,
         private AttributeManagerInterface $attributeManager,
-        private PathValidator $pathValidator
+        private PathValidator $pathValidator,
     ) {
         parent::__construct($id, $parent);
     }
@@ -24,12 +24,12 @@ class ExecutableValidator extends AbstractValidator
         if (!$type->isArchive()) {
             if (Type::PHAR === $type) {
                 if (null !== $values && true !== $values) {
-                    $this->throwException($this->getAttribute(), sprintf('must be true, "%s" given', get_debug_type($values)));
+                    $this->throwException($this->getAttribute(), \sprintf('must be true, "%s" given', get_debug_type($values)));
                 } else {
                     $values = true;
                 }
             } elseif (null !== $values && !\is_bool($values)) {
-                $this->throwException($this->getAttribute(), sprintf('must be boolean, "%s" given', get_debug_type($values)));
+                $this->throwException($this->getAttribute(), \sprintf('must be boolean, "%s" given', get_debug_type($values)));
             }
 
             return $values ? [$this->attributeManager->get(Attribute::PATH)] : [];
@@ -37,7 +37,7 @@ class ExecutableValidator extends AbstractValidator
 
         $values ??= [];
         if (!\is_array($values)) {
-            $this->throwException($this->getAttribute(), sprintf('must be array, "%s" given', get_debug_type($values)));
+            $this->throwException($this->getAttribute(), \sprintf('must be array, "%s" given', get_debug_type($values)));
         }
         array_walk($values, fn (mixed $value) => $this->pathValidator->validate($value));
 

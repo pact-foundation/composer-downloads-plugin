@@ -87,7 +87,7 @@ abstract class AbstractInstallerTestCase extends TestCase
             ->expects($this->once())
             ->method('write')
             ->with(
-                sprintf('<info>Skip extra file <comment>%s</comment></info>', $this->name),
+                \sprintf('<info>Skip extra file <comment>%s</comment></info>', $this->name),
                 true,
                 IOInterface::VERY_VERBOSE
             );
@@ -119,7 +119,7 @@ abstract class AbstractInstallerTestCase extends TestCase
             ->expects($this->once())
             ->method('write')
             ->with(
-                sprintf(
+                \sprintf(
                     '<info>Extra file <comment>%s</comment> has been locally overriden in <comment>%s</comment>. To reset it, delete and reinstall.</info>',
                     $this->name,
                     $this->targetDir,
@@ -234,7 +234,7 @@ abstract class AbstractInstallerTestCase extends TestCase
         $this->io
             ->expects($this->once())
             ->method('error')
-            ->with(sprintf('    Extra file "%s" does not match hash value defined in "%s".', $this->url, $this->name));
+            ->with(\sprintf('    Extra file "%s" does not match hash value defined in "%s".', $this->url, $this->name));
         $this->downloadManager
             ->expects($this->once())
             ->method('cleanup')

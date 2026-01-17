@@ -68,7 +68,7 @@ class ExecutableValidatorTest extends AbstractValidatorTestCase
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
         $this->pathValidator->expects($this->never())->method('validate');
         $this->attributeManager->expects($this->once())->method('get')->with(Attribute::TYPE)->willReturn(Type::ZIP);
-        $this->expectUnexpectedValueException('executable', sprintf('must be array, "%s" given', $type));
+        $this->expectUnexpectedValueException('executable', \sprintf('must be array, "%s" given', $type));
         $this->validator->validate($invalidExecutable);
     }
 
@@ -123,7 +123,7 @@ class ExecutableValidatorTest extends AbstractValidatorTestCase
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
         $this->pathValidator->expects($this->never())->method('validate');
         $this->attributeManager->expects($this->once())->method('get')->with(Attribute::TYPE)->willReturn(Type::FILE);
-        $this->expectUnexpectedValueException('executable', sprintf('must be boolean, "%s" given', $type));
+        $this->expectUnexpectedValueException('executable', \sprintf('must be boolean, "%s" given', $type));
         $this->validator->validate($invalidExecutable);
     }
 
@@ -147,7 +147,7 @@ class ExecutableValidatorTest extends AbstractValidatorTestCase
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
         $this->pathValidator->expects($this->never())->method('validate');
         $this->attributeManager->expects($this->once())->method('get')->with(Attribute::TYPE)->willReturn(Type::PHAR);
-        $this->expectUnexpectedValueException('executable', sprintf('must be true, "%s" given', $type));
+        $this->expectUnexpectedValueException('executable', \sprintf('must be true, "%s" given', $type));
         $this->validator->validate($invalidExecutable);
     }
 

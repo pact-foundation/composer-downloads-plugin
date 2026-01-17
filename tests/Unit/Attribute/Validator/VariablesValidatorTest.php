@@ -45,7 +45,7 @@ class VariablesValidatorTest extends AbstractValidatorTestCase
     public function testInvalidVariables(mixed $invalidVariables, string $type): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('variables', sprintf('must be array, "%s" given', $type));
+        $this->expectUnexpectedValueException('variables', \sprintf('must be array, "%s" given', $type));
         $this->validator->validate($invalidVariables);
     }
 
@@ -67,7 +67,7 @@ class VariablesValidatorTest extends AbstractValidatorTestCase
     public function testInvalidVariableKey(string $invalidVariableKey): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('variables', sprintf('is invalid: Variable key "%s" should be this format "{$variable-name}"', $invalidVariableKey));
+        $this->expectUnexpectedValueException('variables', \sprintf('is invalid: Variable key "%s" should be this format "{$variable-name}"', $invalidVariableKey));
         $this->validator->validate([
             $invalidVariableKey => '"baz"',
         ]);
@@ -93,7 +93,7 @@ class VariablesValidatorTest extends AbstractValidatorTestCase
     public function testInvalidVariableValue(string $invalidVariableValue, string $type): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('variables', sprintf('is invalid: Expression "%s" should be evaluated to string, "%s" given', $invalidVariableValue, $type));
+        $this->expectUnexpectedValueException('variables', \sprintf('is invalid: Expression "%s" should be evaluated to string, "%s" given', $invalidVariableValue, $type));
         $this->validator->validate([
             '{$baz}' => $invalidVariableValue,
         ]);
@@ -115,7 +115,7 @@ class VariablesValidatorTest extends AbstractValidatorTestCase
     public function testInvalidVariableExpressionSyntax(string $expression, string $reason): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('variables', sprintf('is invalid. There is an error while evaluating expression "%s": %s', $expression, $reason));
+        $this->expectUnexpectedValueException('variables', \sprintf('is invalid. There is an error while evaluating expression "%s": %s', $expression, $reason));
         $this->validator->validate([
             '{$baz}' => $expression,
         ]);

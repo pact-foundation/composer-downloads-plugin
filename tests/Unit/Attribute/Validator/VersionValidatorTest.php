@@ -25,7 +25,7 @@ class VersionValidatorTest extends AbstractValidatorTestCase
     public function testInvalidVersion(mixed $invalidVersion, string $type): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('version', sprintf('must be string, "%s" given', $type));
+        $this->expectUnexpectedValueException('version', \sprintf('must be string, "%s" given', $type));
         $this->validator->validate($invalidVersion);
     }
 

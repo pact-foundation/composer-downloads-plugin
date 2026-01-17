@@ -17,7 +17,7 @@ class VariablesValidator extends AbstractValidator
         string $id,
         PackageInterface $parent,
         private AttributeManagerInterface $attributeManager,
-        ?SMPLang $smpl = null
+        ?SMPLang $smpl = null,
     ) {
         parent::__construct($id, $parent);
         $this->smpl = $smpl ?? new SMPLang([
@@ -49,7 +49,7 @@ class VariablesValidator extends AbstractValidator
         }
 
         if (!\is_array($values)) {
-            $this->throwException($this->getAttribute(), sprintf('must be array, "%s" given', get_debug_type($values)));
+            $this->throwException($this->getAttribute(), \sprintf('must be array, "%s" given', get_debug_type($values)));
         }
 
         if (empty($values)) {
@@ -58,15 +58,15 @@ class VariablesValidator extends AbstractValidator
 
         foreach ($values as $key => $value) {
             if (!preg_match('/^{\$[^}]+}$/', $key)) {
-                $this->throwException($this->getAttribute(), sprintf('is invalid: Variable key "%s" should be this format "{$variable-name}"', $key));
+                $this->throwException($this->getAttribute(), \sprintf('is invalid: Variable key "%s" should be this format "{$variable-name}"', $key));
             }
             try {
                 $result = $this->smpl->evaluate($value);
             } catch (Exception $exception) {
-                $this->throwException($this->getAttribute(), sprintf('is invalid. There is an error while evaluating expression "%s": %s', $value, $exception->getMessage()));
+                $this->throwException($this->getAttribute(), \sprintf('is invalid. There is an error while evaluating expression "%s": %s', $value, $exception->getMessage()));
             }
             if (!\is_string($result)) {
-                $this->throwException($this->getAttribute(), sprintf('is invalid: Expression "%s" should be evaluated to string, "%s" given', $value, get_debug_type($result)));
+                $this->throwException($this->getAttribute(), \sprintf('is invalid: Expression "%s" should be evaluated to string, "%s" given', $value, get_debug_type($result)));
             }
             $variables[$key] = $result;
         }

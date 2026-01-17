@@ -11,7 +11,7 @@ class IgnoreValidator extends AbstractValidator
     public function __construct(
         string $id,
         PackageInterface $parent,
-        private AttributeManagerInterface $attributeManager
+        private AttributeManagerInterface $attributeManager,
     ) {
         parent::__construct($id, $parent);
     }
@@ -23,7 +23,7 @@ class IgnoreValidator extends AbstractValidator
         }
 
         if (!\is_array($values)) {
-            $this->throwException($this->getAttribute(), sprintf('must be array, "%s" given', get_debug_type($values)));
+            $this->throwException($this->getAttribute(), \sprintf('must be array, "%s" given', get_debug_type($values)));
         }
 
         $ignores = [];

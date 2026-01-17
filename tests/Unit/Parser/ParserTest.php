@@ -149,7 +149,7 @@ class ParserTest extends TestCase
         string $packageType,
     ): void {
         $this->assertInstanceOf($class, $extraDownload);
-        $this->assertSame(sprintf('vendor/package-name:%s', $id), $extraDownload->getName());
+        $this->assertSame(\sprintf('vendor/package-name:%s', $id), $extraDownload->getName());
         $this->assertSame(ExtraDownload::FAKE_VERSION, $extraDownload->getVersion());
         $this->assertSame($version, $extraDownload->getPrettyVersion());
         $this->assertSame($url, $extraDownload->getDistUrl());

@@ -39,7 +39,7 @@ class ExtraDownloadFactoryTest extends TestCase
             $this->parent
         );
         $this->assertInstanceOf($this->getExtraDownloadClass(), $extraDownload);
-        $this->assertSame(sprintf('vendor/package-name:%s', $id), $extraDownload->getName());
+        $this->assertSame(\sprintf('vendor/package-name:%s', $id), $extraDownload->getName());
         $this->assertSame(ExtraDownload::FAKE_VERSION, $extraDownload->getVersion());
         $this->assertSame('v1.2.3', $extraDownload->getPrettyVersion());
         $this->assertSame('http://example.com/file.zip', $extraDownload->getDistUrl());

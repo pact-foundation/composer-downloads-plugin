@@ -90,7 +90,7 @@ class IgnoreValidatorTest extends AbstractValidatorTestCase
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
         $this->attributeManager->expects($this->once())->method('get')->with(Attribute::TYPE)->willReturn(Type::ZIP);
-        $this->expectUnexpectedValueException('ignore', sprintf('must be array, "%s" given', $type));
+        $this->expectUnexpectedValueException('ignore', \sprintf('must be array, "%s" given', $type));
         $this->validator->validate($invalidIgnore);
     }
 

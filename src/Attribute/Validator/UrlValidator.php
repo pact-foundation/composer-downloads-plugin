@@ -11,7 +11,7 @@ class UrlValidator extends AbstractValidator
     public function __construct(
         string $id,
         PackageInterface $parent,
-        private AttributeManagerInterface $attributeManager
+        private AttributeManagerInterface $attributeManager,
     ) {
         parent::__construct($id, $parent);
     }
@@ -23,7 +23,7 @@ class UrlValidator extends AbstractValidator
         }
 
         if (!\is_string($value)) {
-            $this->throwException($this->getAttribute(), sprintf('must be string, "%s" given', get_debug_type($value)));
+            $this->throwException($this->getAttribute(), \sprintf('must be string, "%s" given', get_debug_type($value)));
         }
 
         $url = strtr($value, $this->attributeManager->get(Attribute::VARIABLES));

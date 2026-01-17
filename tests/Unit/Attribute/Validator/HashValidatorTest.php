@@ -30,7 +30,7 @@ class HashValidatorTest extends AbstractValidatorTestCase
     public function testInvalidHash(mixed $invalidHash, string $type): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('hash', sprintf('must be array, "%s" given', $type));
+        $this->expectUnexpectedValueException('hash', \sprintf('must be array, "%s" given', $type));
         $this->validator->validate($invalidHash);
     }
 
@@ -52,7 +52,7 @@ class HashValidatorTest extends AbstractValidatorTestCase
     public function testInvalidAlgo(mixed $invalidAlgo, string $type): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('hash > algo', sprintf('must be string, "%s" given', $type));
+        $this->expectUnexpectedValueException('hash > algo', \sprintf('must be string, "%s" given', $type));
         $this->validator->validate([
             'algo' => $invalidAlgo,
             'value' => 'abc123',
@@ -75,7 +75,7 @@ class HashValidatorTest extends AbstractValidatorTestCase
     public function testInvalidValue(mixed $invalidValue, string $type): void
     {
         $this->parent->expects($this->once())->method('getName')->willReturn($this->parentName);
-        $this->expectUnexpectedValueException('hash > value', sprintf('must be string, "%s" given', $type));
+        $this->expectUnexpectedValueException('hash > value', \sprintf('must be string, "%s" given', $type));
         $this->validator->validate([
             'algo' => 'md5',
             'value' => $invalidValue,

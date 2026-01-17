@@ -105,9 +105,9 @@ class CleanerTest extends TestCase
         foreach (self::FILES_AND_DIRECTORIES as $path => $type) {
             $remain = \in_array($path, $remainingFilesAndDirs);
             if (self::DIR === $type) {
-                $this->assertSame(is_dir($this->fs->path($path)), $remain, sprintf("Directory '%s' is expected to be %s", $path, $remain ? 'remaining' : 'removed'));
+                $this->assertSame(is_dir($this->fs->path($path)), $remain, \sprintf("Directory '%s' is expected to be %s", $path, $remain ? 'remaining' : 'removed'));
             } else {
-                $this->assertSame(is_file($this->fs->path($path)), $remain, sprintf("File '%s' is expected to be %s", $path, $remain ? 'remaining' : 'removed'));
+                $this->assertSame(is_file($this->fs->path($path)), $remain, \sprintf("File '%s' is expected to be %s", $path, $remain ? 'remaining' : 'removed'));
             }
         }
     }

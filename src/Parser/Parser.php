@@ -48,7 +48,7 @@ class Parser implements ParserInterface
 
             return $extraDownloads;
         } catch (\Exception $exception) {
-            $this->io->writeError(sprintf('    Skipped download extra files for package %s: %s', $package->getName(), $exception->getMessage()));
+            $this->io->writeError(\sprintf('    Skipped download extra files for package %s: %s', $package->getName(), $exception->getMessage()));
 
             return [];
         }
